@@ -3,230 +3,944 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NEON AI</title>
+<title>VANTA — Intelligence Workspace</title>
+
 <script src="https://js.puter.com/v2/"></script>
 
 <style>
 *{box-sizing:border-box}
 :root{
-  --bg:#050505;
-  --panel:#09090b;
-  --panel2:#101012;
-  --panel3:#151518;
-  --border:#242428;
-  --text:#f5f5f7;
-  --muted:#85858d;
-  --accent:#ffffff;
-  --danger:#ff6b6b;
+ --bg:#050506;
+ --panel:#0a0a0c;
+ --panel2:#101014;
+ --panel3:#15151a;
+ --line:#222229;
+ --line2:#303038;
+ --text:#f4f4f7;
+ --muted:#85858f;
+ --soft:#aaaab3;
+ --white:#fff;
+ --danger:#ff7070;
+ --green:#71f7a0;
+ --blue:#7aa7ff;
+ --purple:#b58cff;
 }
-*{scrollbar-width:thin;scrollbar-color:#29292d transparent}
-html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);
-font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+html,body{
+ margin:0;
+ width:100%;
+ height:100%;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{overflow:hidden}
+
 button,input,textarea,select{font:inherit}
 button{color:inherit}
-button:disabled{opacity:.45;cursor:not-allowed}
-.app{height:100vh;display:flex;overflow:hidden}
+button:disabled{opacity:.4;cursor:not-allowed}
 
-/* SIDEBAR */
+*{
+ scrollbar-width:thin;
+ scrollbar-color:#292930 transparent;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+ width:100%;
+ height:100vh;
+ display:flex;
+ overflow:hidden;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
 .sidebar{
-width:280px;flex:none;background:rgba(8,8,9,.96);border-right:1px solid var(--border);
-display:flex;flex-direction:column;padding:15px
+ width:285px;
+ flex:none;
+ border-right:1px solid var(--line);
+ background:rgba(7,7,9,.97);
+ display:flex;
+ flex-direction:column;
+ padding:14px;
 }
-.brand{display:flex;gap:11px;align-items:center;padding:7px 5px 18px}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:11px;
+ padding:7px 5px 19px;
+}
+
 .logo{
-width:36px;height:36px;border:1px solid #3a3a40;border-radius:12px;
-display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff,#333 35%,#090909 70%);
-box-shadow:0 0 30px #fff1
+ width:37px;
+ height:37px;
+ border-radius:12px;
+ display:grid;
+ place-items:center;
+ border:1px solid #3b3b42;
+ background:
+ radial-gradient(circle at 32% 25%,#fff,#aaa 15%,#333 37%,#090909 70%);
+ box-shadow:0 0 35px #fff1;
+ font-size:17px;
 }
-.brand b{letter-spacing:.16em;font-size:14px}
-.brand small{display:block;color:#666;font-size:9px;letter-spacing:.15em;margin-top:2px}
 
-.newchat{
-border:1px solid #29292d;background:#111114;border-radius:12px;padding:12px;
-cursor:pointer;text-align:left
+.brand strong{
+ display:block;
+ font-size:15px;
+ letter-spacing:.18em;
 }
-.newchat:hover{background:#18181b}
 
-.searchbox{
-margin-top:10px;display:flex;align-items:center;gap:8px;
-background:#0d0d0f;border:1px solid #202024;border-radius:10px;padding:9px 10px
+.brand small{
+ display:block;
+ color:#62626a;
+ font-size:8px;
+ letter-spacing:.2em;
+ margin-top:2px;
 }
-.searchbox input{width:100%;border:0;outline:0;background:transparent;color:white;font-size:12px}
-.searchbox span{color:#666}
 
-.sectiontitle{
-font-size:9px;color:#666;letter-spacing:.17em;margin:19px 7px 8px
+.new{
+ width:100%;
+ padding:12px;
+ border:1px solid #29292f;
+ background:#111114;
+ border-radius:12px;
+ cursor:pointer;
+ text-align:left;
 }
-.history{overflow:auto;flex:1}
-.chatitem{
-padding:9px 10px;border-radius:9px;color:#999;font-size:12px;
-cursor:pointer;margin-bottom:3px;display:flex;gap:7px;align-items:center
-}
-.chatitem:hover,.chatitem.active{background:#141416;color:#eee}
-.chatitem .title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pin{font-size:10px;color:#888}
 
-.sidebar-bottom{border-top:1px solid var(--border);padding-top:10px}
-.sidebutton{
-width:100%;border:0;background:transparent;text-align:left;color:#888;
-padding:9px;border-radius:8px;cursor:pointer;font-size:12px
+.new:hover{
+ background:#18181c;
+ border-color:#404047;
 }
-.sidebutton:hover{background:#141416;color:white}
-.status{font-size:10px;color:#666;padding:8px;display:flex;gap:7px;align-items:center}
-.dot{width:6px;height:6px;border-radius:50%;background:#72ff94;box-shadow:0 0 9px #72ff94}
 
-/* MAIN */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
-header{
-height:64px;flex:none;border-bottom:1px solid var(--border);
-display:flex;align-items:center;justify-content:space-between;padding:0 20px;
-background:#060606cc;backdrop-filter:blur(18px);z-index:5
+.search{
+ margin-top:9px;
+ display:flex;
+ align-items:center;
+ gap:7px;
+ padding:9px 10px;
+ background:#0d0d10;
+ border:1px solid #222229;
+ border-radius:10px;
 }
-.modelarea{display:flex;align-items:center;gap:9px}
-.modeldot{width:7px;height:7px;border-radius:50%;background:white;box-shadow:0 0 12px white}
-select{
-background:#0e0e10;border:1px solid #252529;color:#ddd;border-radius:9px;
-padding:8px 30px 8px 10px;outline:0;max-width:250px
+
+.search input{
+ width:100%;
+ border:0;
+ outline:0;
+ color:#eee;
+ background:transparent;
+ font-size:12px;
 }
-.headerbuttons{display:flex;gap:7px}
+
+.search span{color:#666}
+
+.section{
+ margin:19px 7px 8px;
+ font-size:9px;
+ color:#62626a;
+ letter-spacing:.18em;
+}
+
+.history{
+ flex:1;
+ overflow:auto;
+}
+
+.chat-item{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ padding:9px 9px;
+ border-radius:9px;
+ margin-bottom:3px;
+ cursor:pointer;
+ color:#999;
+ font-size:12px;
+}
+
+.chat-item:hover,
+.chat-item.active{
+ background:#151518;
+ color:#fff;
+}
+
+.chat-title{
+ flex:1;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+}
+
+.chat-pin{font-size:9px}
+
+.sidebar-bottom{
+ border-top:1px solid var(--line);
+ padding-top:9px;
+}
+
+.side-btn{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:#888;
+ text-align:left;
+ padding:9px;
+ border-radius:8px;
+ cursor:pointer;
+ font-size:12px;
+}
+
+.side-btn:hover{
+ background:#151518;
+ color:#fff;
+}
+
+.connection{
+ padding:8px;
+ color:#666;
+ font-size:10px;
+ display:flex;
+ gap:7px;
+ align-items:center;
+}
+
+.green-dot{
+ width:6px;
+ height:6px;
+ border-radius:50%;
+ background:var(--green);
+ box-shadow:0 0 10px var(--green);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+ flex:1;
+ min-width:0;
+ display:flex;
+ flex-direction:column;
+ position:relative;
+}
+
+.topbar{
+ height:66px;
+ flex:none;
+ border-bottom:1px solid var(--line);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 20px;
+ background:#060607dd;
+ backdrop-filter:blur(20px);
+ z-index:10;
+}
+
+.top-left{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+
+.current-model-dot{
+ width:7px;
+ height:7px;
+ border-radius:50%;
+ background:#fff;
+ box-shadow:0 0 12px #fff;
+}
+
+.current-model{
+ max-width:260px;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ font-size:13px;
+ font-weight:600;
+}
+
+.top-right{
+ display:flex;
+ gap:7px;
+}
+
 .icon{
-width:35px;height:35px;border:1px solid #232327;background:#0d0d0f;
-border-radius:9px;cursor:pointer;display:grid;place-items:center;color:#aaa
+ width:35px;
+ height:35px;
+ display:grid;
+ place-items:center;
+ border:1px solid #24242b;
+ background:#0d0d10;
+ border-radius:9px;
+ cursor:pointer;
+ color:#aaa;
 }
-.icon:hover{border-color:#444;color:white}
 
-/* CHAT */
-.chat{flex:1;overflow:auto;padding:25px 18px 160px}
-.inner{max-width:900px;margin:auto}
-.hero{text-align:center;padding:8vh 0 35px}
-.orb{
-width:70px;height:70px;border-radius:23px;margin:auto auto 20px;
-background:radial-gradient(circle at 35% 25%,#fff,#777 20%,#181818 50%,#050505 72%);
-border:1px solid #34343a;box-shadow:0 0 70px #fff12
+.icon:hover{
+ color:white;
+ border-color:#44444c;
 }
-.hero h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.06em;margin:0 0 10px}
-.hero p{color:#777;margin:0;font-size:13px}
-.suggestions{max-width:700px;margin:28px auto;display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.suggestion{
-padding:13px;border:1px solid #202024;background:#0b0b0d;
-border-radius:12px;text-align:left;color:#999;cursor:pointer
-}
-.suggestion:hover{background:#151518;color:#fff;border-color:#3a3a40}
 
-.message{display:flex;gap:11px;margin:22px 0;animation:appear .2s ease}
-@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+/* =========================================================
+   CHAT
+========================================================= */
+
+.chat{
+ flex:1;
+ overflow:auto;
+ padding:28px 18px 175px;
+}
+
+.inner{
+ max-width:920px;
+ margin:auto;
+}
+
+.hero{
+ text-align:center;
+ padding:8vh 0 35px;
+}
+
+.hero-orb{
+ width:76px;
+ height:76px;
+ margin:0 auto 22px;
+ border-radius:25px;
+ border:1px solid #38383f;
+ background:
+ radial-gradient(circle at 33% 25%,#fff,#aaa 14%,#333 35%,#080808 72%);
+ box-shadow:0 0 80px #fff12;
+ display:grid;
+ place-items:center;
+ font-size:23px;
+}
+
+.hero h1{
+ margin:0;
+ font-size:clamp(35px,6vw,62px);
+ letter-spacing:-.065em;
+}
+
+.hero p{
+ color:#777;
+ font-size:13px;
+ margin:12px 0 27px;
+}
+
+.quick-grid{
+ max-width:720px;
+ margin:auto;
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:9px;
+}
+
+.quick{
+ padding:14px;
+ background:#0b0b0e;
+ border:1px solid #202026;
+ border-radius:13px;
+ cursor:pointer;
+ text-align:left;
+ color:#999;
+ transition:.18s;
+}
+
+.quick:hover{
+ transform:translateY(-2px);
+ color:white;
+ background:#141417;
+ border-color:#393940;
+}
+
+.message{
+ display:flex;
+ gap:11px;
+ margin:23px 0;
+ animation:messageIn .2s ease;
+}
+
+@keyframes messageIn{
+ from{opacity:0;transform:translateY(6px)}
+ to{opacity:1;transform:none}
+}
+
 .avatar{
-width:31px;height:31px;flex:none;border-radius:10px;border:1px solid #29292d;
-display:grid;place-items:center;font-size:9px;font-weight:700;background:#101012
+ flex:none;
+ width:32px;
+ height:32px;
+ border-radius:10px;
+ border:1px solid #292930;
+ display:grid;
+ place-items:center;
+ font-size:9px;
+ font-weight:800;
+ background:#101014;
 }
-.user .avatar{background:#eee;color:#050505;border-color:#eee}
-.content{font-size:14px;line-height:1.7;max-width:calc(100% - 45px);color:#ddd}
-.user .content{
-background:#111114;border:1px solid #202024;border-radius:14px;padding:9px 12px
-}
-.ai .content{padding-top:1px}
 
-.typing{display:flex;gap:4px;padding:10px 0}
-.typing i{width:5px;height:5px;border-radius:50%;background:#777;animation:blink 1s infinite}
-.typing i:nth-child(2){animation-delay:.15s}
-.typing i:nth-child(3){animation-delay:.3s}
-@keyframes blink{50%{opacity:.2;transform:translateY(-3px)}}
+.user .avatar{
+ background:#eee;
+ color:#050505;
+ border-color:#eee;
+}
+
+.content{
+ max-width:calc(100% - 45px);
+ color:#ddd;
+ font-size:14px;
+ line-height:1.72;
+ overflow-wrap:anywhere;
+}
+
+.user .content{
+ background:#111114;
+ border:1px solid #222229;
+ border-radius:14px;
+ padding:9px 12px;
+}
+
+.ai .content{
+ padding-top:1px;
+}
+
+.content a{
+ color:#9bb9ff;
+}
 
 pre{
-background:#09090b;border:1px solid #26262a;border-radius:12px;
-padding:14px;overflow:auto;position:relative;margin:10px 0
+ position:relative;
+ margin:11px 0;
+ padding:15px;
+ border-radius:12px;
+ background:#08080a;
+ border:1px solid #27272d;
+ overflow:auto;
 }
-code{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px}
-.codecopy{
-position:absolute;right:8px;top:8px;background:#19191c;border:1px solid #333;
-border-radius:7px;padding:5px 8px;font-size:10px;cursor:pointer
-}
-.codecopy:hover{background:#25252a}
 
-.tools{display:flex;gap:6px;margin-top:8px}
+pre code{
+ font-family:"SFMono-Regular",Consolas,monospace;
+ font-size:12px;
+ line-height:1.6;
+}
+
+.copy-code{
+ position:absolute;
+ right:8px;
+ top:8px;
+ border:1px solid #33333a;
+ background:#151519;
+ border-radius:7px;
+ padding:5px 8px;
+ font-size:10px;
+ cursor:pointer;
+}
+
+.copy-code:hover{
+ background:#222229;
+}
+
+.msg-tools{
+ display:flex;
+ gap:6px;
+ margin-top:8px;
+}
+
 .tool{
-border:1px solid #252529;background:#0c0c0e;color:#888;
-border-radius:7px;padding:5px 8px;font-size:10px;cursor:pointer
+ border:1px solid #24242a;
+ background:#0c0c0f;
+ color:#85858e;
+ border-radius:7px;
+ padding:5px 8px;
+ cursor:pointer;
+ font-size:10px;
 }
-.tool:hover{color:white;background:#151518}
 
-.generated-image{
-max-width:min(600px,100%);border-radius:14px;border:1px solid #29292d;
-margin-top:10px;display:block
+.tool:hover{
+ color:#fff;
+ background:#151519;
 }
 
-/* COMPOSER */
+.generated{
+ display:block;
+ max-width:min(680px,100%);
+ border:1px solid #2a2a31;
+ border-radius:15px;
+ margin-top:10px;
+}
+
+.image-actions{
+ display:flex;
+ gap:6px;
+ margin-top:7px;
+}
+
+/* =========================================================
+   COMPOSER
+========================================================= */
+
 .composer-wrap{
-position:fixed;bottom:0;left:280px;right:0;padding:18px;
-background:linear-gradient(transparent,#050505 38%);z-index:4
+ position:fixed;
+ bottom:0;
+ left:285px;
+ right:0;
+ padding:18px;
+ background:linear-gradient(transparent,#050506 42%);
+ z-index:8;
 }
+
 .composer{
-max-width:900px;margin:auto;background:#0d0d0fdd;border:1px solid #29292d;
-border-radius:17px;padding:9px;backdrop-filter:blur(20px);box-shadow:0 15px 55px #000
+ max-width:920px;
+ margin:auto;
+ background:#0c0c0fe8;
+ border:1px solid #2a2a31;
+ border-radius:18px;
+ padding:9px;
+ backdrop-filter:blur(22px);
+ box-shadow:0 20px 70px #000;
 }
+
 textarea{
-width:100%;resize:none;outline:0;border:0;background:transparent;color:#eee;
-padding:8px 9px;min-height:42px;max-height:160px
+ width:100%;
+ min-height:42px;
+ max-height:170px;
+ resize:none;
+ outline:0;
+ border:0;
+ background:transparent;
+ color:#eee;
+ padding:8px 9px;
 }
+
 textarea::placeholder{color:#555}
-.composebar{display:flex;align-items:center;justify-content:space-between}
-.composeleft,.composeright{display:flex;align-items:center;gap:5px}
-.smallbtn{
-border:1px solid #242428;background:#101012;border-radius:8px;
-padding:7px 9px;color:#888;cursor:pointer;font-size:11px
+
+.compose-bar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
 }
-.smallbtn:hover{color:white}
+
+.compose-tools{
+ display:flex;
+ gap:5px;
+ align-items:center;
+}
+
+.compose-btn{
+ border:1px solid #25252b;
+ background:#101014;
+ color:#888;
+ border-radius:8px;
+ padding:7px 9px;
+ cursor:pointer;
+ font-size:10px;
+}
+
+.compose-btn:hover{
+ color:white;
+ background:#17171b;
+}
+
 .send{
-width:38px;height:38px;border:0;border-radius:11px;background:#f1f1f1;color:#050505;
-cursor:pointer;font-weight:bold
+ width:39px;
+ height:39px;
+ border:0;
+ border-radius:11px;
+ background:#f1f1f1;
+ color:#050505;
+ cursor:pointer;
+ font-weight:900;
 }
 
-/* MODALS */
+.send:hover{background:#fff}
+
+.send.stop{
+ background:#ff7777;
+}
+
+/* =========================================================
+   MODEL LAB
+========================================================= */
+
 .overlay{
-position:fixed;inset:0;background:#000a;backdrop-filter:blur(8px);
-display:none;align-items:center;justify-content:center;z-index:20;padding:18px
+ position:fixed;
+ inset:0;
+ background:#000b;
+ backdrop-filter:blur(10px);
+ z-index:50;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
 }
-.modal{
-width:min(650px,100%);max-height:85vh;overflow:auto;
-background:#0d0d0f;border:1px solid #29292d;border-radius:17px;
-box-shadow:0 30px 100px #000;padding:20px
+
+.panel{
+ width:min(850px,100%);
+ max-height:88vh;
+ overflow:auto;
+ background:#0c0c0f;
+ border:1px solid #2a2a31;
+ border-radius:20px;
+ box-shadow:0 30px 120px #000;
+ padding:20px;
 }
-.modal h2{margin:0 0 5px;font-size:20px}
-.modal p{color:#777;font-size:12px}
-.modal label{display:block;color:#999;font-size:11px;margin:16px 0 7px}
-.modal textarea,.modal input{
-width:100%;background:#09090b;border:1px solid #29292d;border-radius:10px;
-color:white;padding:10px;outline:0
+
+.panel-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:flex-start;
+ gap:15px;
+ margin-bottom:18px;
 }
-.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}
+
+.panel-head h2{
+ margin:0;
+ font-size:23px;
+ letter-spacing:-.03em;
+}
+
+.panel-head p{
+ color:#777;
+ font-size:11px;
+ margin:5px 0 0;
+}
+
+.close{
+ width:33px;
+ height:33px;
+ border:1px solid #292930;
+ background:#121216;
+ border-radius:9px;
+ cursor:pointer;
+}
+
+.model-tabs{
+ display:flex;
+ gap:7px;
+ overflow:auto;
+ padding-bottom:10px;
+}
+
+.model-tab{
+ white-space:nowrap;
+ border:1px solid #26262d;
+ background:#101014;
+ color:#888;
+ border-radius:9px;
+ padding:8px 12px;
+ cursor:pointer;
+ font-size:11px;
+}
+
+.model-tab.active{
+ background:#eee;
+ color:#050505;
+ border-color:#eee;
+}
+
+.model-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:9px;
+}
+
+.model-card{
+ border:1px solid #232329;
+ background:#101014;
+ border-radius:14px;
+ padding:13px;
+ cursor:pointer;
+ transition:.16s;
+}
+
+.model-card:hover{
+ background:#17171b;
+ border-color:#44444c;
+ transform:translateY(-1px);
+}
+
+.model-card.selected{
+ border-color:#fff;
+ box-shadow:0 0 0 1px #fff2;
+}
+
+.model-name{
+ font-size:13px;
+ font-weight:700;
+ margin-bottom:5px;
+}
+
+.model-meta{
+ color:#777;
+ font-size:10px;
+ line-height:1.5;
+}
+
+.badges{
+ display:flex;
+ gap:5px;
+ margin-top:8px;
+ flex-wrap:wrap;
+}
+
+.badge{
+ font-size:8px;
+ border:1px solid #303038;
+ color:#999;
+ padding:3px 5px;
+ border-radius:5px;
+}
+
+.badge.free{
+ color:#75f49f;
+ border-color:#275d3a;
+}
+
+.model-search{
+ width:100%;
+ border:1px solid #292930;
+ background:#09090b;
+ color:white;
+ outline:0;
+ padding:11px;
+ border-radius:10px;
+ margin-bottom:10px;
+}
+
+/* =========================================================
+   HUB
+========================================================= */
+
+.hub-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.hub-card{
+ border:1px solid #25252b;
+ background:#101014;
+ border-radius:15px;
+ padding:16px;
+ cursor:pointer;
+ transition:.16s;
+}
+
+.hub-card:hover{
+ transform:translateY(-2px);
+ background:#17171b;
+ border-color:#44444c;
+}
+
+.hub-icon{
+ font-size:21px;
+ margin-bottom:13px;
+}
+
+.hub-card strong{
+ display:block;
+ font-size:13px;
+}
+
+.hub-card span{
+ color:#777;
+ font-size:10px;
+ display:block;
+ margin-top:4px;
+ line-height:1.5;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.field{
+ margin:15px 0;
+}
+
+.field label{
+ display:block;
+ color:#999;
+ font-size:10px;
+ margin-bottom:7px;
+}
+
+.field textarea,
+.field input,
+.field select{
+ width:100%;
+ border:1px solid #292930;
+ background:#09090b;
+ color:#eee;
+ border-radius:10px;
+ outline:0;
+ padding:10px;
+}
+
+.actions{
+ display:flex;
+ justify-content:flex-end;
+ gap:8px;
+ margin-top:16px;
+}
+
 .primary{
-background:#eee;color:#050505;border:0;border-radius:9px;padding:9px 13px;cursor:pointer
+ border:0;
+ background:#eee;
+ color:#050505;
+ border-radius:9px;
+ padding:9px 13px;
+ cursor:pointer;
 }
+
 .secondary{
-background:#151518;border:1px solid #29292d;border-radius:9px;padding:9px 13px;cursor:pointer
+ border:1px solid #292930;
+ background:#151519;
+ color:#ddd;
+ border-radius:9px;
+ padding:9px 13px;
+ cursor:pointer;
 }
 
-.palette{
-width:min(600px,100%);background:#0c0c0e;border:1px solid #29292d;
-border-radius:15px;overflow:hidden
-}
-.palette input{
-width:100%;padding:15px;background:transparent;border:0;border-bottom:1px solid #222;
-outline:0;color:white
-}
-.command{padding:11px 14px;cursor:pointer;color:#aaa;font-size:13px}
-.command:hover{background:#171719;color:white}
+/* =========================================================
+   CODING LAB
+========================================================= */
 
-.hidden{display:none!important}
+.code-lab{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ height:65vh;
+}
 
-@media(max-width:760px){
+.code-pane,
+.preview-pane{
+ min-height:0;
+ display:flex;
+ flex-direction:column;
+ border:1px solid #292930;
+ border-radius:13px;
+ overflow:hidden;
+ background:#08080a;
+}
+
+.pane-head{
+ height:40px;
+ flex:none;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:0 10px;
+ border-bottom:1px solid #25252b;
+ color:#888;
+ font-size:10px;
+}
+
+#codeEditor{
+ flex:1;
+ width:100%;
+ resize:none;
+ border:0;
+ outline:0;
+ background:#070709;
+ color:#ddd;
+ padding:13px;
+ font-family:Consolas,monospace;
+ font-size:12px;
+ line-height:1.6;
+}
+
+#previewFrame{
+ flex:1;
+ width:100%;
+ border:0;
+ background:white;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.dots{
+ display:flex;
+ gap:4px;
+ padding:10px 0;
+}
+
+.dots i{
+ width:5px;
+ height:5px;
+ border-radius:50%;
+ background:#777;
+ animation:dot 1s infinite;
+}
+
+.dots i:nth-child(2){animation-delay:.15s}
+.dots i:nth-child(3){animation-delay:.3s}
+
+@keyframes dot{
+ 50%{opacity:.2;transform:translateY(-3px)}
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:800px){
+
 .sidebar{display:none}
-.composer-wrap{left:0}
-header{padding:0 12px}
-.chat{padding:18px 12px 150px}
-.suggestions{grid-template-columns:1fr}
-select{max-width:170px}
-.hero{padding-top:6vh}
+
+.composer-wrap{
+ left:0;
+}
+
+.quick-grid{
+ grid-template-columns:1fr;
+}
+
+.model-grid{
+ grid-template-columns:1fr;
+}
+
+.hub-grid{
+ grid-template-columns:1fr 1fr;
+}
+
+.topbar{
+ padding:0 11px;
+}
+
+.current-model{
+ max-width:160px;
+}
+
+.chat{
+ padding-left:11px;
+ padding-right:11px;
+}
+
+}
+
+@media(max-width:520px){
+
+.hub-grid{
+ grid-template-columns:1fr;
+}
+
+.compose-btn:nth-child(n+3){
+ display:none;
+}
+
 }
 </style>
 </head>
@@ -235,204 +949,598 @@ select{max-width:170px}
 
 <div class="app">
 
+<!-- ======================================================
+     SIDEBAR
+====================================================== -->
+
 <aside class="sidebar">
 
 <div class="brand">
 <div class="logo">✦</div>
 <div>
-<b>NEON</b>
-<small>AI WORKSPACE</small>
+<strong>VANTA</strong>
+<small>INTELLIGENCE WORKSPACE</small>
 </div>
 </div>
 
-<button class="newchat" id="newChat">＋ New conversation</button>
+<button class="new" id="newChat">＋ New conversation</button>
 
-<div class="searchbox">
+<div class="search">
 <span>⌕</span>
-<input id="chatSearch" placeholder="Search conversations">
+<input id="searchChats" placeholder="Search conversations">
 </div>
 
-<div class="sectiontitle">CONVERSATIONS</div>
+<div class="section">CONVERSATIONS</div>
+
 <div class="history" id="history"></div>
 
 <div class="sidebar-bottom">
-<button class="sidebutton" id="memoryBtn">🧠 Memory</button>
-<button class="sidebutton" id="settingsBtn">⚙ Settings</button>
-<button class="sidebutton" id="exportBtn">↗ Export current chat</button>
-<div class="status"><span class="dot"></span> Puter connected</div>
+
+<button class="side-btn" id="hubBtn">◈ Workspace</button>
+<button class="side-btn" id="memoryBtn">🧠 Memory</button>
+<button class="side-btn" id="personalBtn">✦ Personalize</button>
+<button class="side-btn" id="settingsBtn">⚙ Settings</button>
+<button class="side-btn" id="exportBtn">↗ Export</button>
+
+<div class="connection">
+<span class="green-dot"></span>
+Puter AI
+</div>
+
 </div>
 
 </aside>
 
+
+<!-- ======================================================
+     MAIN
+====================================================== -->
+
 <main class="main">
 
-<header>
+<header class="topbar">
 
-<div class="modelarea">
-<span class="modeldot"></span>
-<select id="model">
-<option>Loading models...</option>
-</select>
+<div class="top-left">
+
+<span class="current-model-dot"></span>
+
+<span class="current-model" id="currentModel">
+GPT-5.6 Luna
+</span>
+
 </div>
 
-<div class="headerbuttons">
-<button class="icon" id="tempBtn" title="Temporary chat">♢</button>
-<button class="icon" id="commandBtn" title="Command palette">⌘</button>
+<div class="top-right">
+
+<button class="icon" id="modelBtn" title="Model Lab">◇</button>
+<button class="icon" id="commandBtn" title="Command Center">⌘</button>
+<button class="icon" id="temporaryBtn" title="Temporary Chat">♢</button>
 <button class="icon" id="clearBtn" title="Clear">⌫</button>
+
 </div>
 
 </header>
 
+
 <section class="chat" id="chat">
+
 <div class="inner" id="messages">
 
 <div class="hero" id="hero">
 
-<div class="orb"></div>
+<div class="hero-orb">✦</div>
 
 <h1>What are we building?</h1>
 
-<p>One workspace. AI, files, images, study tools and more.</p>
+<p>Your AI workspace for thinking, studying, coding and creating.</p>
 
-<div class="suggestions">
+<div class="quick-grid">
 
-<button class="suggestion">Explain quantum computing simply</button>
-<button class="suggestion">Build me a futuristic website</button>
-<button class="suggestion">Create a JEE study plan</button>
-<button class="suggestion">Brainstorm a crazy startup</button>
+<button class="quick" data-action="study">
+🎓 <b>Study</b><br>
+<span>JEE-focused learning, revision and practice.</span>
+</button>
+
+<button class="quick" data-action="code">
+⌘ <b>Coding Lab</b><br>
+<span>Build, debug and preview code with AI.</span>
+</button>
+
+<button class="quick" data-action="image">
+✦ <b>Image Studio</b><br>
+<span>Create and download AI-generated images.</span>
+</button>
+
+<button class="quick" data-action="web">
+◎ <b>Web Research</b><br>
+<span>Ask questions using live web search.</span>
+</button>
 
 </div>
 
 </div>
 
 </div>
+
 </section>
+
+
+<!-- ======================================================
+     COMPOSER
+====================================================== -->
 
 <div class="composer-wrap">
 
 <div class="composer">
 
-<textarea id="input" placeholder="Message NEON..." rows="1"></textarea>
+<textarea
+id="input"
+rows="1"
+placeholder="Message VANTA..."
+></textarea>
 
-<div class="composebar">
+<div class="compose-bar">
 
-<div class="composeleft">
-<button class="smallbtn" id="attachBtn">＋ File</button>
-<button class="smallbtn" id="imageBtn">✦ Image</button>
-<button class="smallbtn" id="voiceBtn">🎙</button>
-<input type="file" id="fileInput" accept=".txt,.md,.json,image/*" hidden>
+<div class="compose-tools">
+
+<button class="compose-btn" id="attachBtn">＋ File</button>
+<button class="compose-btn" id="imageBtn">✦ Image</button>
+<button class="compose-btn" id="voiceBtn">🎙 Voice</button>
+<button class="compose-btn" id="webBtn">◎ Web</button>
+
+<input
+type="file"
+id="fileInput"
+accept=".txt,.md,.json,.csv,image/*"
+hidden
+>
+
 </div>
 
-<div class="composeright">
+<div style="display:flex;align-items:center;gap:8px">
+
 <span style="font-size:9px;color:#555">Enter ↵</span>
-<button class="send" id="send">↑</button>
+
+<button class="send" id="sendBtn">↑</button>
+
 </div>
 
 </div>
+
 </div>
+
 </div>
 
 </main>
 </div>
 
 
-<!-- SETTINGS -->
+<!-- ======================================================
+     MODEL LAB
+====================================================== -->
+
+<div class="overlay" id="modelOverlay">
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div>
+<h2>Model Lab</h2>
+<p>Choose from the models currently exposed by Puter.</p>
+</div>
+
+<button class="close" data-close="modelOverlay">×</button>
+
+</div>
+
+<input
+class="model-search"
+id="modelSearch"
+placeholder="Search GPT, Claude, Sonnet, Gemini..."
+>
+
+<div class="model-tabs">
+
+<button class="model-tab active" data-filter="all">All</button>
+<button class="model-tab" data-filter="free">Free</button>
+<button class="model-tab" data-filter="gpt">GPT</button>
+<button class="model-tab" data-filter="claude">Claude</button>
+<button class="model-tab" data-filter="coding">Coding</button>
+
+</div>
+
+<div class="model-grid" id="modelGrid">
+
+<div class="model-card">
+<div class="model-name">Loading model catalog...</div>
+<div class="model-meta">Connecting to Puter.</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     WORKSPACE HUB
+====================================================== -->
+
+<div class="overlay" id="hubOverlay">
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div>
+<h2>Workspace</h2>
+<p>Everything VANTA can do, organized into modes.</p>
+</div>
+
+<button class="close" data-close="hubOverlay">×</button>
+
+</div>
+
+<div class="hub-grid">
+
+<div class="hub-card" data-hub="study">
+<div class="hub-icon">🎓</div>
+<strong>Study Mode</strong>
+<span>JEE learning, revision, quizzes, flashcards and problem solving.</span>
+</div>
+
+<div class="hub-card" data-hub="jee">
+<div class="hub-icon">⚡</div>
+<strong>JEE Command Center</strong>
+<span>Physics, Chemistry and Mathematics focused workflows.</span>
+</div>
+
+<div class="hub-card" data-hub="coding">
+<div class="hub-icon">⌘</div>
+<strong>Coding Lab</strong>
+<span>AI coding, debugging, explanations and browser preview.</span>
+</div>
+
+<div class="hub-card" data-hub="image">
+<div class="hub-icon">🎨</div>
+<strong>Image Studio</strong>
+<span>Create, edit and download images.</span>
+</div>
+
+<div class="hub-card" data-hub="web">
+<div class="hub-icon">◎</div>
+<strong>Web Research</strong>
+<span>Live web-search enabled AI research.</span>
+</div>
+
+<div class="hub-card" data-hub="quiz">
+<div class="hub-icon">📝</div>
+<strong>Quiz Builder</strong>
+<span>Generate interactive practice questions.</span>
+</div>
+
+<div class="hub-card" data-hub="flash">
+<div class="hub-icon">🃏</div>
+<strong>Flashcards</strong>
+<span>Turn any topic into revision cards.</span>
+</div>
+
+<div class="hub-card" data-hub="memory">
+<div class="hub-icon">🧠</div>
+<strong>Memory</strong>
+<span>Manage the information VANTA is allowed to remember.</span>
+</div>
+
+<div class="hub-card" data-hub="personal">
+<div class="hub-icon">✦</div>
+<strong>Personalize</strong>
+<span>Customize personality, response style and behavior.</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     PERSONALIZATION
+====================================================== -->
+
+<div class="overlay" id="personalOverlay">
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div>
+<h2>Personalization</h2>
+<p>Make VANTA behave exactly how you want.</p>
+</div>
+
+<button class="close" data-close="personalOverlay">×</button>
+
+</div>
+
+<div class="field">
+<label>Assistant personality</label>
+<select id="personality">
+<option value="balanced">Balanced</option>
+<option value="concise">Concise & direct</option>
+<option value="teacher">Teacher</option>
+<option value="coder">Senior engineer</option>
+<option value="creative">Creative</option>
+<option value="analytical">Analytical</option>
+</select>
+</div>
+
+<div class="field">
+<label>Response style</label>
+<select id="style">
+<option value="normal">Normal</option>
+<option value="short">Short</option>
+<option value="detailed">Detailed</option>
+<option value="technical">Technical</option>
+</select>
+</div>
+
+<div class="field">
+<label>Custom instructions</label>
+<textarea id="customInstructions" rows="6"></textarea>
+</div>
+
+<div class="actions">
+<button class="secondary" data-close="personalOverlay">Cancel</button>
+<button class="primary" id="savePersonal">Save</button>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     MEMORY
+====================================================== -->
+
+<div class="overlay" id="memoryOverlay">
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div>
+<h2>🧠 Memory</h2>
+<p>Only information written here is intentionally persisted as AI memory.</p>
+</div>
+
+<button class="close" data-close="memoryOverlay">×</button>
+
+</div>
+
+<div class="field">
+<textarea id="memoryText" rows="12"
+placeholder="Example:
+Prefers concise explanations.
+Likes examples.
+Currently preparing for JEE.
+..."></textarea>
+</div>
+
+<div class="actions">
+<button class="secondary" data-close="memoryOverlay">Cancel</button>
+<button class="primary" id="saveMemory">Save Memory</button>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     SETTINGS
+====================================================== -->
+
 <div class="overlay" id="settingsOverlay">
-<div class="modal">
 
+<div class="panel">
+
+<div class="panel-head">
+
+<div>
 <h2>Settings</h2>
-<p>Customize how NEON behaves.</p>
+<p>Control VANTA.</p>
+</div>
 
+<button class="close" data-close="settingsOverlay">×</button>
+
+</div>
+
+<div class="field">
 <label>System instructions</label>
-<textarea id="systemPrompt" rows="5"
-placeholder="Tell the AI how you want it to behave..."></textarea>
+<textarea id="systemPrompt" rows="8"></textarea>
+</div>
 
+<div class="field">
 <label>Theme</label>
-<select id="themeSelect">
-<option value="black">Void Black</option>
-<option value="midnight">Midnight Blue</option>
+
+<select id="theme">
+
+<option value="void">Void</option>
+<option value="midnight">Midnight</option>
 <option value="mono">Monochrome</option>
+
 </select>
 
-<div class="modal-actions">
-<button class="secondary closeModal">Cancel</button>
+</div>
+
+<div class="actions">
+<button class="secondary" data-close="settingsOverlay">Cancel</button>
 <button class="primary" id="saveSettings">Save</button>
 </div>
 
 </div>
-</div>
-
-
-<!-- MEMORY -->
-<div class="overlay" id="memoryOverlay">
-<div class="modal">
-
-<h2>🧠 AI Memory</h2>
-<p>Only information you explicitly save here is added to the AI context.</p>
-
-<textarea id="memoryText" rows="10"
-placeholder="Example:
-User prefers concise answers.
-User likes futuristic UI.
-..."></textarea>
-
-<div class="modal-actions">
-<button class="secondary closeModal">Cancel</button>
-<button class="primary" id="saveMemory">Save memory</button>
-</div>
 
 </div>
-</div>
 
 
-<!-- COMMAND PALETTE -->
+<!-- ======================================================
+     COMMAND CENTER
+====================================================== -->
+
 <div class="overlay" id="commandOverlay">
 
-<div class="palette">
+<div class="panel" style="padding:0;overflow:hidden">
 
-<input id="commandSearch" placeholder="Search commands...">
+<input
+id="commandSearch"
+style="
+width:100%;
+padding:16px;
+background:#0b0b0e;
+border:0;
+border-bottom:1px solid #25252b;
+outline:0;
+color:white
+"
+placeholder="Search commands..."
+>
 
 <div id="commands">
 
-<div class="command" data-action="new">＋ New conversation</div>
-<div class="command" data-action="study">🎓 Study mode</div>
-<div class="command" data-action="quiz">📝 Generate quiz</div>
-<div class="command" data-action="flash">🃏 Generate flashcards</div>
-<div class="command" data-action="image">🎨 Generate image</div>
-<div class="command" data-action="memory">🧠 Memory</div>
-<div class="command" data-action="settings">⚙ Settings</div>
-<div class="command" data-action="export">↗ Export chat</div>
+<div class="command" data-command="new">＋ New conversation</div>
+<div class="command" data-command="model">◇ Model Lab</div>
+<div class="command" data-command="study">🎓 Study Mode</div>
+<div class="command" data-command="jee">⚡ JEE Mode</div>
+<div class="command" data-command="coding">⌘ Coding Lab</div>
+<div class="command" data-command="image">🎨 Image Studio</div>
+<div class="command" data-command="web">◎ Web Research</div>
+<div class="command" data-command="quiz">📝 Quiz</div>
+<div class="command" data-command="flash">🃏 Flashcards</div>
+<div class="command" data-command="memory">🧠 Memory</div>
+<div class="command" data-command="personal">✦ Personalize</div>
+<div class="command" data-command="settings">⚙ Settings</div>
 
 </div>
+
 </div>
+
+</div>
+
+
+<!-- ======================================================
+     CODING LAB
+====================================================== -->
+
+<div class="overlay" id="codingOverlay">
+
+<div class="panel" style="width:min(1200px,100%)">
+
+<div class="panel-head">
+
+<div>
+<h2>⌘ Coding Lab</h2>
+<p>Ask the selected model to build, explain, debug or improve code.</p>
+</div>
+
+<button class="close" data-close="codingOverlay">×</button>
+
+</div>
+
+<div style="
+display:flex;
+gap:7px;
+margin-bottom:10px;
+flex-wrap:wrap;
+">
+
+<select id="codingLanguage" class="secondary">
+<option>HTML</option>
+<option>JavaScript</option>
+<option>CSS</option>
+<option>Python</option>
+<option>C++</option>
+<option>Java</option>
+<option>TypeScript</option>
+</select>
+
+<button class="secondary" id="codingAsk">Ask AI</button>
+<button class="secondary" id="runCode">Run Preview</button>
+<button class="secondary" id="copyAllCode">Copy</button>
+
+</div>
+
+<div class="code-lab">
+
+<div class="code-pane">
+
+<div class="pane-head">
+<span>EDITOR</span>
+<span id="codeModelName">Current model</span>
+</div>
+
+<textarea id="codeEditor"
+placeholder="// Write or ask VANTA to generate code..."
+></textarea>
+
+</div>
+
+<div class="preview-pane">
+
+<div class="pane-head">
+<span>LIVE PREVIEW</span>
+</div>
+
+<iframe id="previewFrame"></iframe>
+
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 
 <script>
 
 /* =========================================================
-   NEON CORE
+   STATE
 ========================================================= */
 
-const $ = s => document.querySelector(s);
+const $=s=>document.querySelector(s);
 
-const input = $("#input");
-const send = $("#send");
-const messages = $("#messages");
-const hero = $("#hero");
-const historyEl = $("#history");
-const modelSelect = $("#model");
+let chats=
+JSON.parse(localStorage.getItem("vanta_chats")||"[]");
 
-let chats = JSON.parse(localStorage.getItem("neon_chats") || "[]");
-let currentId = null;
-let busy = false;
-let abortController = null;
+let currentId=null;
 
-let settings = JSON.parse(localStorage.getItem("neon_settings") || "{}");
+let busy=false;
 
-let memory = localStorage.getItem("neon_memory") || "";
+let temporary=false;
 
-let conversation = [];
+let webMode=false;
+
+let abortController=null;
+
+let models=[];
+
+let modelFilter="all";
+
+let settings=
+JSON.parse(localStorage.getItem("vanta_settings")||"{}");
+
+let memory=
+localStorage.getItem("vanta_memory")||"";
+
+let currentModel=
+localStorage.getItem("vanta_model")||"gpt-5.6-luna";
+
+let personalization=
+JSON.parse(localStorage.getItem("vanta_personalization")||"{}");
 
 
 /* =========================================================
@@ -440,167 +1548,321 @@ let conversation = [];
 ========================================================= */
 
 function saveChats(){
-localStorage.setItem("neon_chats",JSON.stringify(chats));
+localStorage.setItem("vanta_chats",JSON.stringify(chats));
 }
 
 function saveSettings(){
-localStorage.setItem("neon_settings",JSON.stringify(settings));
+localStorage.setItem("vanta_settings",JSON.stringify(settings));
 }
 
-function makeId(){
-return Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function savePersonal(){
+localStorage.setItem(
+"vanta_personalization",
+JSON.stringify(personalization)
+);
 }
 
-function defaultSystem(){
-
-return settings.systemPrompt ||
-`You are NEON, a highly capable AI assistant.
-
-Be helpful, accurate, concise and direct.
-
-Use Markdown when useful.
-
-If the user asks for code, provide complete working code.
-
-Never pretend a feature exists if it does not.
-
-${memory ? "\nUser memory:\n"+memory : ""}`;
-
+function id(){
+return Date.now().toString(36)+
+Math.random().toString(36).slice(2,8);
 }
 
 
 /* =========================================================
-   CHAT MANAGEMENT
+   DEFAULT SYSTEM
+========================================================= */
+
+function systemPrompt(){
+
+let personalityText={
+balanced:"Be balanced, helpful and direct.",
+concise:"Be concise. Avoid unnecessary explanation.",
+teacher:"Teach clearly. Build understanding step by step.",
+coder:"Act like a senior software engineer. Prefer complete working implementations.",
+creative:"Be imaginative and generate strong original ideas.",
+analytical:"Reason carefully and structure complex problems clearly."
+}[personalization.personality||"balanced"];
+
+let styleText={
+normal:"Use a natural amount of detail.",
+short:"Keep responses compact.",
+detailed:"Provide thorough explanations when useful.",
+technical:"Prefer precise technical explanations."
+}[personalization.style||"normal"];
+
+return `
+You are VANTA, an advanced general-purpose AI assistant.
+
+${personalityText}
+
+${styleText}
+
+You can help with:
+- general knowledge
+- mathematics
+- physics
+- chemistry
+- programming
+- writing
+- research
+- study planning
+- JEE preparation
+- image prompting
+- technical problem solving
+
+For study questions:
+Explain the reasoning, not just the answer.
+
+For JEE questions:
+Prioritize NCERT/CBSE foundations and JEE Main/Advanced-style reasoning.
+Clearly separate formulas, concepts, traps and methods.
+Never invent a source or claim you accessed a book if you did not.
+
+For coding:
+Return complete runnable code when appropriate.
+Do not give fragments when the user clearly asks for a complete implementation.
+
+${memory?`
+INTENTIONAL USER MEMORY:
+${memory}
+`:""}
+
+${personalization.custom||""}
+
+${settings.systemPrompt||""}
+`;
+}
+
+
+/* =========================================================
+   CHAT
 ========================================================= */
 
 function createChat(){
-const id=makeId();
 
 const chat={
-id,
-title:"New conversation",
-created:Date.now(),
-updated:Date.now(),
-pinned:false,
-temporary:temporaryMode,
-messages:[]
+ id:id(),
+ title:"New conversation",
+ messages:[],
+ created:Date.now(),
+ updated:Date.now(),
+ pinned:false,
+ temporary
 };
 
+if(!temporary){
 chats.unshift(chat);
 saveChats();
-loadChat(id);
-renderHistory();
 }
 
-function getCurrent(){
-return chats.find(c=>c.id===currentId);
-}
-
-function loadChat(id){
-
-currentId=id;
-
-const chat=getCurrent();
-
-if(!chat)return;
-
-conversation=[
-{role:"system",content:defaultSystem()},
-...chat.messages
-];
-
-messages.innerHTML="";
-
-if(chat.messages.length===0){
-
-messages.appendChild(hero);
-hero.style.display="";
-
-}else{
-
-hero.style.display="none";
-
-chat.messages.forEach(m=>{
-renderMessage(m.role,m.content,m.image);
-});
-
-}
+currentId=chat.id;
 
 renderHistory();
-scrollBottom();
+
+renderChat();
+
 }
 
-function renderHistory(filter=""){
+function currentChat(){
+return chats.find(x=>x.id===currentId);
+}
 
-historyEl.innerHTML="";
+function renderChat(){
 
-const sorted=[...chats]
-.sort((a,b)=>
-(b.pinned-a.pinned) || (b.updated-a.updated)
+const chat=currentChat();
+
+$("#messages").innerHTML="";
+
+if(!chat||!chat.messages.length){
+
+showHero();
+
+return;
+
+}
+
+$("#hero")?.remove();
+
+chat.messages.forEach(m=>
+renderMessage(m.role,m.content,m.image)
 );
 
-sorted
-.filter(c=>c.title.toLowerCase().includes(filter.toLowerCase()))
-.forEach(c=>{
+scrollBottom();
 
-const div=document.createElement("div");
-div.className="chatitem"+(c.id===currentId?" active":"");
+}
 
-div.innerHTML=`
-<span class="pin">${c.pinned?"📌":""}</span>
-<span class="title">${escapeHTML(c.title)}</span>
+function showHero(){
+
+$("#messages").innerHTML=`
+<div class="hero" id="hero">
+
+<div class="hero-orb">✦</div>
+
+<h1>What are we building?</h1>
+
+<p>Your AI workspace for thinking, studying, coding and creating.</p>
+
+<div class="quick-grid">
+
+<button class="quick" data-action="study">
+🎓 <b>Study</b><br>
+<span>JEE-focused learning, revision and practice.</span>
+</button>
+
+<button class="quick" data-action="code">
+⌘ <b>Coding Lab</b><br>
+<span>Build, debug and preview code with AI.</span>
+</button>
+
+<button class="quick" data-action="image">
+✦ <b>Image Studio</b><br>
+<span>Create and download AI-generated images.</span>
+</button>
+
+<button class="quick" data-action="web">
+◎ <b>Web Research</b><br>
+<span>Ask questions using live web search.</span>
+</button>
+
+</div>
+</div>
 `;
 
-div.onclick=()=>loadChat(c.id);
-
-div.oncontextmenu=e=>{
-e.preventDefault();
-
-const action=prompt(
-"Type: rename / pin / delete"
+document
+.querySelectorAll(".quick")
+.forEach(x=>
+x.onclick=()=>runAction(x.dataset.action)
 );
 
-if(action==="rename"){
-const n=prompt("New name:",c.title);
-if(n){
-c.title=n;
-saveChats();
-renderHistory();
-}
-}
-
-if(action==="pin"){
-c.pinned=!c.pinned;
-saveChats();
-renderHistory();
-}
-
-if(action==="delete"){
-chats=chats.filter(x=>x.id!==c.id);
-saveChats();
-
-if(currentId===c.id){
-if(chats.length)loadChat(chats[0].id);
-else createChat();
-}
-
-renderHistory();
-}
-};
-
-historyEl.appendChild(div);
-
-});
 }
 
 
 /* =========================================================
-   MESSAGE RENDERER
+   HISTORY
 ========================================================= */
 
-function escapeHTML(s){
+function renderHistory(filter=""){
 
-return String(s).replace(/[&<>"']/g,c=>({
+const box=$("#history");
+
+box.innerHTML="";
+
+[...chats]
+.sort((a,b)=>
+(b.pinned-a.pinned)||
+(b.updated-a.updated)
+)
+.filter(c=>
+c.title.toLowerCase()
+.includes(filter.toLowerCase())
+)
+.forEach(chat=>{
+
+const el=document.createElement("div");
+
+el.className=
+"chat-item"+
+(chat.id===currentId?" active":"");
+
+el.innerHTML=`
+<span class="chat-pin">
+${chat.pinned?"📌":""}
+</span>
+<span class="chat-title">
+${esc(chat.title)}
+</span>
+`;
+
+el.onclick=()=>{
+
+currentId=chat.id;
+
+renderHistory(
+$("#searchChats").value
+);
+
+renderChat();
+
+};
+
+el.oncontextmenu=e=>{
+
+e.preventDefault();
+
+const action=
+prompt("rename / pin / delete");
+
+if(action==="rename"){
+
+const name=
+prompt("New conversation name:",chat.title);
+
+if(name){
+
+chat.title=name;
+
+saveChats();
+
+renderHistory();
+
+}
+
+}
+
+if(action==="pin"){
+
+chat.pinned=!chat.pinned;
+
+saveChats();
+
+renderHistory();
+
+}
+
+if(action==="delete"){
+
+chats=
+chats.filter(x=>x.id!==chat.id);
+
+saveChats();
+
+if(currentId===chat.id){
+
+if(chats.length){
+
+currentId=chats[0].id;
+
+renderChat();
+
+}else{
+
+createChat();
+
+}
+
+}
+
+renderHistory();
+
+}
+
+};
+
+box.appendChild(el);
+
+});
+
+}
+
+
+/* =========================================================
+   MESSAGE FORMAT
+========================================================= */
+
+function esc(s){
+
+return String(s)
+.replace(/[&<>"']/g,c=>({
 "&":"&amp;",
 "<":"&lt;",
 ">":"&gt;",
@@ -610,198 +1872,315 @@ return String(s).replace(/[&<>"']/g,c=>({
 
 }
 
-function formatText(text){
+function format(text){
 
-let safe=escapeHTML(text);
-
-/* code blocks */
+let safe=esc(text);
 
 safe=safe.replace(
-/```(\w+)?\n([\s\S]*?)```/g,
+/```([\w+-]*)\n([\s\S]*?)```/g,
 (_,lang,code)=>`
 <pre>
-<button class="codecopy" onclick="copyCode(this)">Copy</button>
+<button class="copy-code"
+onclick="copyCode(this)">
+Copy
+</button>
 <code>${code.trim()}</code>
-</pre>`
+</pre>
+`
 );
 
-/* basic bold */
+safe=safe.replace(
+/\*\*(.*?)\*\*/g,
+"<strong>$1</strong>"
+);
 
-safe=safe.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
+safe=safe.replace(
+/`([^`]+)`/g,
+"<code>$1</code>"
+);
 
-/* inline code */
-
-safe=safe.replace(/`([^`]+)`/g,"<code>$1</code>");
-
-/* line breaks */
-
-safe=safe.replace(/\n/g,"<br>");
+safe=safe.replace(
+/\n/g,
+"<br>"
+);
 
 return safe;
 
 }
 
-function renderMessage(role,text,image=null){
+window.copyCode=function(btn){
+
+navigator.clipboard.writeText(
+btn.parentElement.querySelector("code").innerText
+);
+
+btn.textContent="Copied";
+
+setTimeout(
+()=>btn.textContent="Copy",
+1000
+);
+
+};
+
+function renderMessage(role,text,image){
 
 const row=document.createElement("div");
 
-row.className="message "+(role==="user"?"user":"ai");
+row.className=
+"message "+(role==="user"?"user":"ai");
 
-let extra="";
+let imageHTML="";
 
 if(image){
 
-extra=`<img class="generated-image" src="${image}">`;
+imageHTML=`
+<img class="generated" src="${image}">
+<div class="image-actions">
+<button class="tool"
+onclick="downloadImage('${image}')">
+↓ Download Image
+</button>
+<button class="tool"
+onclick="openImage('${image}')">
+↗ Open
+</button>
+</div>
+`;
 
 }
 
 row.innerHTML=`
-<div class="avatar">${role==="user"?"YOU":"✦"}</div>
+<div class="avatar">
+${role==="user"?"YOU":"✦"}
+</div>
+
 <div class="content">
-${formatText(text)}
-${extra}
-${role==="assistant" ? `
-<div class="tools">
-<button class="tool" onclick="regenerate()">↻ Regenerate</button>
-<button class="tool" onclick="speakText(this)">🔊 Speak</button>
-</div>`:""}
+
+${format(text)}
+
+${imageHTML}
+
+${
+role==="assistant"
+?
+`
+<div class="msg-tools">
+
+<button class="tool"
+onclick="regenerate()">
+↻ Regenerate
+</button>
+
+<button class="tool"
+onclick="speak(this)">
+🔊 Speak
+</button>
+
+</div>
+`
+:""
+}
+
 </div>
 `;
 
-messages.appendChild(row);
+$("#messages").appendChild(row);
 
 }
 
-window.copyCode=function(btn){
-
-const code=btn.parentElement.querySelector("code").innerText;
-
-navigator.clipboard.writeText(code);
-
-btn.textContent="Copied";
-
-setTimeout(()=>btn.textContent="Copy",1000);
-
-};
-
 
 /* =========================================================
-   SEND MESSAGE
+   SEND
 ========================================================= */
 
-async function sendMessage(customText=null){
+async function sendMessage(text=null){
 
-const text=(customText ?? input.value).trim();
+const value=
+(text!==null?text:$("#input").value)
+.trim();
 
-if(!text || busy)return;
+if(!value||busy)return;
 
-if(!currentId)createChat();
+if(!currentChat())createChat();
 
-const chat=getCurrent();
+const chat=currentChat();
 
 if(!chat)return;
 
 busy=true;
 
-send.disabled=true;
+$("#sendBtn").textContent="■";
+$("#sendBtn").classList.add("stop");
 
-input.value="";
+$("#input").value="";
 
-resize();
+resizeInput();
 
-hero.style.display="none";
+if(chat.messages.length===0){
+
+chat.title=value.slice(0,48);
+
+}
 
 chat.messages.push({
 role:"user",
-content:text
+content:value
 });
 
 chat.updated=Date.now();
 
-if(chat.title==="New conversation"){
+if(!temporary)saveChats();
 
-chat.title=text.slice(0,45);
-
-}
-
-saveChats();
-
-conversation.push({
-role:"user",
-content:text
-});
-
-renderMessage("user",text);
+renderChat();
 
 addTyping();
 
-scrollBottom();
-
 try{
 
-const model=modelSelect.value;
+abortController=
+new AbortController();
 
-const response=await puter.ai.chat(
-conversation,
-{
-model:model,
-stream:false,
-normalize:true
+/* IMPORTANT:
+   Use the exact currently selected Puter model.
+   Web search is only added when enabled.
+*/
+
+const options={
+model:currentModel,
+stream:false
+};
+
+if(webMode){
+
+options.tools=[
+{type:"web_search"}
+];
+
 }
+
+const response=
+await puter.ai.chat(
+[
+{
+role:"system",
+content:systemPrompt()
+},
+...chat.messages
+],
+options
 );
+
+if(!response){
+
+throw new Error(
+"No response returned by Puter."
+);
+
+}
+
+let answer="";
+
+if(response.message){
+
+if(Array.isArray(response.message.content)){
+
+answer=response.message.content
+.map(x=>
+typeof x==="string"
+?x
+:x?.text||""
+)
+.join("");
+
+}else{
+
+answer=
+response.message.content;
+}
+
+}
+
+if(!answer&&response.text)
+answer=response.text;
+
+if(!answer)
+answer=String(response);
 
 removeTyping();
 
-let reply="";
-
-if(response?.message?.content){
-reply=response.message.content;
-}else if(response?.text){
-reply=response.text;
-}else{
-reply=String(response);
-}
-
-conversation.push({
-role:"assistant",
-content:reply
-});
-
 chat.messages.push({
 role:"assistant",
-content:reply
+content:answer
 });
 
 chat.updated=Date.now();
 
-saveChats();
+if(!temporary)saveChats();
 
-renderMessage("assistant",reply);
+renderChat();
 
-renderHistory();
-
-}catch(err){
+}catch(error){
 
 removeTyping();
 
+const message=
+error?.message||
+error?.error?.message||
+"Unknown Puter error.";
+
 renderMessage(
 "assistant",
-"⚠️ "+(err?.message||"The AI request failed.")
+"⚠️ **Puter request failed**\n\n"+
+message+
+"\n\nTry another model from Model Lab."
 );
 
 }finally{
 
 busy=false;
 
-send.disabled=false;
+$("#sendBtn").textContent="↑";
+$("#sendBtn").classList.remove("stop");
 
-input.focus();
+$("#input").focus();
+
+renderHistory();
 
 scrollBottom();
 
 }
 
 }
+
+
+/* =========================================================
+   STOP
+========================================================= */
+
+$("#sendBtn").onclick=()=>{
+
+if(busy){
+
+try{
+abortController?.abort();
+}catch{}
+
+busy=false;
+
+removeTyping();
+
+$("#sendBtn").textContent="↑";
+
+$("#sendBtn").classList.remove("stop");
+
+return;
+
+}
+
+sendMessage();
+
+};
 
 
 /* =========================================================
@@ -821,19 +2200,21 @@ row.className="message ai";
 row.innerHTML=`
 <div class="avatar">✦</div>
 <div class="content">
-<span class="typing">
+<div class="dots">
 <i></i><i></i><i></i>
-</span>
+</div>
 </div>
 `;
 
-messages.appendChild(row);
+$("#messages").appendChild(row);
+
+scrollBottom();
 
 }
 
 function removeTyping(){
 
-document.querySelector("#typing")?.remove();
+$("#typing")?.remove();
 
 }
 
@@ -846,203 +2227,407 @@ async function loadModels(){
 
 try{
 
-const models=await puter.ai.listModels();
+const result=
+await puter.ai.listModels();
 
-modelSelect.innerHTML="";
+models=
+Array.isArray(result)
+?result
+:[];
 
-const wanted=[
-["gpt-6","GPT 6"],
-["gpt-6-astra","GPT 6 Astra"],
-["claude","Claude Latest / Fable"],
-["sonnet","Claude Sonnet"],
-["gpt-sol","GPT Sol"]
-];
+if(!models.length){
 
-const used=new Set();
-
-wanted.forEach(([needle,label])=>{
-
-const found=models.find(m=>
-String(m.id).toLowerCase().includes(needle) ||
-String(m.name||"").toLowerCase().includes(needle) ||
-(m.aliases||[]).some(a=>
-String(a).toLowerCase().includes(needle)
-)
-);
-
-if(found){
-
-addModel(found.id,label+" · "+found.name);
-
-used.add(found.id);
-
-}
-
-});
-
-/* Add actual Claude/GPT models automatically */
-
-models
-.filter(m=>
-/gpt|claude|sonnet/i.test(
-`${m.id} ${m.name||""} ${(m.aliases||[]).join(" ")}`
-)
-)
-.slice(0,25)
-.forEach(m=>{
-
-if(!used.has(m.id)){
-
-addModel(
-m.id,
-m.name||m.id
-);
-
-}
-
-});
-
-if(!modelSelect.options.length){
-
-addModel(
-"gpt-5-nano",
-"Default Puter model"
-);
-
-}
-
-}catch(e){
-
-modelSelect.innerHTML=
-`<option value="gpt-5-nano">Puter default</option>`;
-
-}
-
-}
-
-function addModel(id,label){
-
-const o=document.createElement("option");
-
-o.value=id;
-
-o.textContent=label;
-
-modelSelect.appendChild(o);
-
-}
-
-
-/* =========================================================
-   IMAGE GENERATION
-========================================================= */
-
-async function generateImage(){
-
-const prompt=window.prompt(
-"Describe the image you want:"
-);
-
-if(!prompt)return;
-
-if(!currentId)createChat();
-
-addTyping();
-
-try{
-
-const result=await puter.ai.txt2img(prompt);
-
-removeTyping();
-
-let url=
-result?.url ||
-result?.image_url ||
-result?.src;
-
-if(typeof result==="string")url=result;
-
-if(url){
-
-const chat=getCurrent();
-
-chat.messages.push({
-role:"assistant",
-content:"Generated image:\n"+prompt,
-image:url
-});
-
-saveChats();
-
-renderMessage(
-"assistant",
-"Generated image:\n"+prompt,
-url
-);
-
-}else{
-
-renderMessage(
-"assistant",
-"Image generation returned no displayable image."
-);
-
-}
-
-}catch(e){
-
-removeTyping();
-
-renderMessage(
-"assistant",
-"⚠️ Image generation failed: "+e.message
-);
-
-}
-
-}
-
-
-/* =========================================================
-   FILES
-========================================================= */
-
-$("#attachBtn").onclick=()=>$("#fileInput").click();
-
-$("#fileInput").onchange=async e=>{
-
-const file=e.target.files[0];
-
-if(!file)return;
-
-if(file.type.startsWith("image/")){
-
-const reader=new FileReader();
-
-reader.onload=()=>{
-
-sendMessage(
-`I attached an image named "${file.name}". Please analyze it if your selected model supports image input.`
-);
-
-};
-
-reader.readAsDataURL(file);
+useFallback();
 
 return;
 
 }
 
-const text=await file.text();
+/*
+  Make GPT-5.6 Luna the safe default if available.
+*/
 
-const clipped=text.slice(0,100000);
+const luna=
+models.find(m=>
+m.id==="gpt-5.6-luna"||
+m.id==="openai/gpt-5.6-luna"||
+(m.aliases||[]).includes("gpt-5.6-luna")
+);
 
-input.value=
-`Analyze this file: ${file.name}\n\n${clipped}`;
+if(
+!models.some(m=>
+m.id===currentModel
+)
+){
 
-resize();
+currentModel=
+luna?.id||
+models[0].id;
 
-input.focus();
+localStorage.setItem(
+"vanta_model",
+currentModel
+);
+
+}
+
+renderModels();
+
+updateCurrentModel();
+
+}catch(e){
+
+console.error(e);
+
+useFallback();
+
+}
+
+}
+
+function useFallback(){
+
+models=[{
+id:"gpt-5.6-luna",
+name:"GPT-5.6 Luna",
+provider:"openai",
+aliases:["gpt-5.6-luna"]
+}];
+
+currentModel="gpt-5.6-luna";
+
+renderModels();
+
+updateCurrentModel();
+
+}
+
+function modelName(m){
+
+return m.name||
+m.id||
+"Unknown model";
+
+}
+
+function isFree(m){
+
+const id=String(m.id||"");
+
+if(id.endsWith(":free"))return true;
+
+if(
+m.cost&&
+typeof m.cost.input==="number"&&
+typeof m.cost.output==="number"
+){
+
+return m.cost.input===0&&
+m.cost.output===0;
+
+}
+
+return false;
+
+}
+
+function modelMatchesFilter(m){
+
+const hay=
+`${m.id} ${m.name||""} ${(m.aliases||[]).join(" ")} ${m.provider||""}`
+.toLowerCase();
+
+if(modelFilter==="free")
+return isFree(m);
+
+if(modelFilter==="gpt")
+return /gpt|openai/.test(hay);
+
+if(modelFilter==="claude")
+return /claude|sonnet|anthropic/.test(hay);
+
+if(modelFilter==="coding")
+return /coder|code|deepseek|qwen|claude|gpt/.test(hay);
+
+return true;
+
+}
+
+function renderModels(){
+
+const grid=$("#modelGrid");
+
+const query=
+$("#modelSearch").value.toLowerCase();
+
+grid.innerHTML="";
+
+const visible=
+models
+.filter(modelMatchesFilter)
+.filter(m=>
+`${m.id} ${m.name||""} ${(m.aliases||[]).join(" ")}`
+.toLowerCase()
+.includes(query)
+)
+.slice(0,100);
+
+if(!visible.length){
+
+grid.innerHTML=`
+<div class="model-card">
+<div class="model-name">
+No matching model
+</div>
+<div class="model-meta">
+That model is not currently exposed by your Puter catalog.
+</div>
+</div>
+`;
+
+return;
+
+}
+
+visible.forEach(m=>{
+
+const card=document.createElement("div");
+
+card.className=
+"model-card"+
+(m.id===currentModel?" selected":"");
+
+const free=isFree(m);
+
+card.innerHTML=`
+<div class="model-name">
+${esc(modelName(m))}
+</div>
+
+<div class="model-meta">
+${esc(m.provider||"Puter")}
+<br>
+ID: ${esc(m.id)}
+</div>
+
+<div class="badges">
+
+${free?
+`<span class="badge free">FREE VARIANT</span>`:""}
+
+<span class="badge">
+${m.context?
+Math.round(m.context/1000)+"K context":
+"AI model"
+}
+</span>
+
+</div>
+`;
+
+card.onclick=()=>{
+
+currentModel=m.id;
+
+localStorage.setItem(
+"vanta_model",
+currentModel
+);
+
+updateCurrentModel();
+
+renderModels();
+
+close("modelOverlay");
+
+};
+
+grid.appendChild(card);
+
+});
+
+}
+
+function updateCurrentModel(){
+
+const m=
+models.find(x=>x.id===currentModel);
+
+$("#currentModel").textContent=
+m?modelName(m):currentModel;
+
+$("#codeModelName").textContent=
+m?modelName(m):currentModel;
+
+}
+
+
+/* =========================================================
+   MODEL LAB UI
+========================================================= */
+
+$("#modelBtn").onclick=
+()=>open("modelOverlay");
+
+document
+.querySelectorAll(".model-tab")
+.forEach(tab=>{
+
+tab.onclick=()=>{
+
+document
+.querySelectorAll(".model-tab")
+.forEach(x=>
+x.classList.remove("active")
+);
+
+tab.classList.add("active");
+
+modelFilter=tab.dataset.filter;
+
+renderModels();
+
+};
+
+});
+
+$("#modelSearch").oninput=
+renderModels;
+
+
+/* =========================================================
+   WEB
+========================================================= */
+
+function toggleWeb(){
+
+webMode=!webMode;
+
+$("#webBtn").style.color=
+webMode?"#fff":"#888";
+
+$("#webBtn").textContent=
+webMode?"◎ Web ON":"◎ Web";
+
+}
+
+$("#webBtn").onclick=toggleWeb;
+
+function webResearch(){
+
+webMode=true;
+
+$("#webBtn").style.color="#fff";
+
+$("#input").value=
+"Research this topic using current web information: ";
+
+resizeInput();
+
+$("#input").focus();
+
+}
+
+
+/* =========================================================
+   IMAGE STUDIO
+========================================================= */
+
+async function generateImage(){
+
+const prompt=
+window.prompt(
+"Describe the image you want:"
+);
+
+if(!prompt)return;
+
+if(!currentChat())
+createChat();
+
+addTyping();
+
+try{
+
+const img=
+await puter.ai.txt2img(
+prompt,
+{
+model:
+"gpt-image-2"
+}
+);
+
+/*
+  Puter returns an HTMLImageElement
+  in browsers.
+*/
+
+const src=
+img?.src||
+img?.url||
+(typeof img==="string"?img:null);
+
+removeTyping();
+
+if(!src){
+
+throw new Error(
+"No image source returned."
+);
+
+}
+
+const chat=currentChat();
+
+chat.messages.push({
+role:"assistant",
+content:
+"Generated image:\n"+prompt,
+image:src
+});
+
+if(!temporary)saveChats();
+
+renderChat();
+
+}catch(e){
+
+removeTyping();
+
+renderMessage(
+"assistant",
+"⚠️ Image generation failed.\n\n"+
+(e?.message||e)
+);
+
+}
+
+}
+
+$("#imageBtn").onclick=
+generateImage;
+
+window.downloadImage=function(src){
+
+const a=document.createElement("a");
+
+a.href=src;
+
+a.download=
+"vanta-generated-"+Date.now()+".png";
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+};
+
+window.openImage=function(src){
+
+window.open(src,"_blank");
 
 };
 
@@ -1051,36 +2636,48 @@ input.focus();
    VOICE
 ========================================================= */
 
-let recognition=null;
+$("#voiceBtn").onclick=async()=>{
 
-$("#voiceBtn").onclick=()=>{
+if(
+!("SpeechRecognition"in window)&&
+!("webkitSpeechRecognition"in window)
+){
 
-if(!("webkitSpeechRecognition" in window) &&
-!window.SpeechRecognition){
-
-alert("Speech recognition is not supported by this browser.");
+alert(
+"Speech recognition is not supported in this browser."
+);
 
 return;
 
 }
 
-const SpeechRecognition=
-window.SpeechRecognition||window.webkitSpeechRecognition;
+const Recognition=
+window.SpeechRecognition||
+window.webkitSpeechRecognition;
 
-recognition=new SpeechRecognition();
+const recognition=
+new Recognition();
 
-recognition.lang="en-US";
+recognition.lang="en-IN";
 
 recognition.interimResults=false;
 
+recognition.maxAlternatives=1;
+
 recognition.onresult=e=>{
 
-input.value+=
-(e.results[0][0].transcript+" ");
+const text=
+e.results[0][0].transcript;
 
-resize();
+$("#input").value+=
+(text+" ");
+
+resizeInput();
 
 };
+
+recognition.onerror=e=>
+console.warn(e);
 
 recognition.start();
 
@@ -1091,17 +2688,91 @@ recognition.start();
    TEXT TO SPEECH
 ========================================================= */
 
-window.speakText=function(btn){
+window.speak=function(btn){
 
-const content=
-btn.closest(".content").innerText;
+const text=
+btn.closest(".content")
+.innerText;
 
-const utterance=
-new SpeechSynthesisUtterance(content);
+if(!("speechSynthesis"in window)){
+
+alert("Text-to-speech is not supported.");
+
+return;
+
+}
 
 speechSynthesis.cancel();
 
+const utterance=
+new SpeechSynthesisUtterance(text);
+
+utterance.rate=.98;
+
 speechSynthesis.speak(utterance);
+
+};
+
+
+/* =========================================================
+   FILES
+========================================================= */
+
+$("#attachBtn").onclick=
+()=>$("#fileInput").click();
+
+$("#fileInput").onchange=async e=>{
+
+const file=e.target.files[0];
+
+if(!file)return;
+
+if(file.type.startsWith("image/")){
+
+/*
+  Use Puter's image-to-text capability
+  to inspect an uploaded image.
+*/
+
+try{
+
+addTyping();
+
+const result=
+await puter.ai.img2txt(file);
+
+removeTyping();
+
+$("#input").value=
+"Analyze this uploaded image:\n\n"+
+(result?.text||result);
+
+resizeInput();
+
+}catch(err){
+
+removeTyping();
+
+alert(
+"Image analysis failed: "+
+err.message
+);
+
+}
+
+return;
+
+}
+
+const text=
+await file.text();
+
+$("#input").value=
+`Analyze this file: ${file.name}
+
+${text.slice(0,120000)}`;
+
+resizeInput();
 
 };
 
@@ -1114,237 +2785,351 @@ window.regenerate=async function(){
 
 if(busy)return;
 
-const chat=getCurrent();
+const chat=currentChat();
 
-if(!chat)return;
+if(!chat||!chat.messages.length)return;
 
-const last=chat.messages[chat.messages.length-1];
+const last=
+chat.messages[chat.messages.length-1];
 
-if(!last || last.role!=="assistant")return;
+if(last.role!=="assistant")return;
 
 chat.messages.pop();
 
-conversation.pop();
+if(!temporary)saveChats();
 
-messages.lastElementChild?.remove();
+renderChat();
 
-const lastUser=
+const previous=
 chat.messages[chat.messages.length-1];
 
-if(lastUser?.role==="user"){
+if(previous?.role==="user"){
 
-conversation=
-[
-{role:"system",content:defaultSystem()},
-...chat.messages
-];
-
-await askAgain();
+await sendMessage(
+previous.content
+);
 
 }
 
 };
 
-async function askAgain(){
 
-const chat=getCurrent();
+/* =========================================================
+   STUDY MODE
+========================================================= */
 
-busy=true;
+function studyMode(){
 
-send.disabled=true;
+close("hubOverlay");
 
-addTyping();
+const topic=
+prompt(
+"JEE / study topic:"
+);
+
+if(!topic)return;
+
+const promptText=`
+ACTIVATE STUDY MODE.
+
+Topic:
+${topic}
+
+Teach this as an expert JEE mentor.
+
+STRUCTURE:
+
+1. Prerequisites
+2. Core concept
+3. Intuition
+4. Important formulas
+5. Derivation where relevant
+6. NCERT-level foundation
+7. JEE Main approach
+8. JEE Advanced insight
+9. Common mistakes
+10. Shortcuts / patterns
+11. One solved example
+12. Three practice problems
+13. 60-second revision summary
+
+Do not invent textbook references.
+
+If current information or an exact source is needed, use web search.
+
+Keep the teaching interactive and ask me to attempt practice problems rather than always immediately revealing the solution.
+`;
+
+sendMessage(promptText);
+
+}
+
+
+/* =========================================================
+   JEE MODE
+========================================================= */
+
+function jeeMode(){
+
+close("hubOverlay");
+
+const subject=
+prompt(
+"JEE subject/topic? Example: Physics — Ray Optics"
+);
+
+if(!subject)return;
+
+sendMessage(`
+ACTIVATE JEE COMMAND CENTER.
+
+Topic:
+${subject}
+
+Act as a rigorous JEE Main + Advanced mentor.
+
+Use:
+- NCERT foundations
+- Formula architecture
+- Concept connections
+- PYQ-style reasoning
+- JEE Main speed techniques
+- JEE Advanced multi-concept thinking
+- Common traps
+- Difficulty progression
+
+First diagnose the topic's prerequisites.
+Then teach it.
+Then give a mini test.
+Do not skip reasoning.
+`);
+
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+function quizMode(){
+
+const topic=
+prompt("Quiz topic:");
+
+if(!topic)return;
+
+sendMessage(`
+Create an interactive JEE-style quiz on:
+
+${topic}
+
+Rules:
+- 10 questions
+- Mix conceptual and numerical questions
+- Easy → medium → hard
+- Do not reveal answers immediately
+- Wait for my answers
+- Grade my final attempt
+- Explain every mistake
+`);
+
+}
+
+
+/* =========================================================
+   FLASHCARDS
+========================================================= */
+
+function flashMode(){
+
+const topic=
+prompt("Flashcard topic:");
+
+if(!topic)return;
+
+sendMessage(`
+Create a high-quality revision deck for:
+
+${topic}
+
+Generate 20 flashcards.
+
+Each:
+CARD
+Question:
+Answer:
+Why it matters:
+Common trap:
+
+Focus on high-yield JEE knowledge.
+`);
+
+}
+
+
+/* =========================================================
+   CODING LAB
+========================================================= */
+
+function codingLab(){
+
+open("codingOverlay");
+
+}
+
+$("#codingAsk").onclick=async()=>{
+
+const language=
+$("#codingLanguage").value;
+
+const existing=
+$("#codeEditor").value;
+
+const request=
+prompt(
+`What should the AI do with your ${language} code?`
+);
+
+if(!request)return;
+
+const codingPrompt=`
+You are inside VANTA Coding Lab.
+
+Language:
+${language}
+
+User request:
+${request}
+
+Current code:
+\`\`\`
+${existing}
+\`\`\`
+
+Return:
+1. Brief explanation
+2. Complete corrected/improved code
+3. Important changes
+4. Any bugs or security concerns
+`;
 
 try{
 
-const response=await puter.ai.chat(
-conversation,
+const response=
+await puter.ai.chat(
+[
 {
-model:modelSelect.value,
-stream:false,
-normalize:true
+role:"system",
+content:
+"You are an expert software engineer. Give complete working code."
+},
+{
+role:"user",
+content:codingPrompt
+}
+],
+{
+model:currentModel,
+stream:false
 }
 );
 
-removeTyping();
-
-const reply=
+const answer=
 response?.message?.content||
 response?.text||
 String(response);
 
-conversation.push({
-role:"assistant",
-content:reply
-});
+const match=
+answer.match(
+/```(?:\w+)?\n([\s\S]*?)```/
+);
 
-chat.messages.push({
-role:"assistant",
-content:reply
-});
+if(match){
 
-saveChats();
+$("#codeEditor").value=
+match[1].trim();
 
-renderMessage("assistant",reply);
+}else{
+
+$("#codeEditor").value=
+answer;
+
+}
 
 }catch(e){
 
-removeTyping();
-
-renderMessage("assistant","⚠️ "+e.message);
-
-}finally{
-
-busy=false;
-
-send.disabled=false;
-
-}
-
-}
-
-
-/* =========================================================
-   EXPORT
-========================================================= */
-
-function exportChat(){
-
-const chat=getCurrent();
-
-if(!chat)return;
-
-const json=
-JSON.stringify(chat,null,2);
-
-download(
-chat.title+".json",
-json,
-"application/json"
+alert(
+"AI coding request failed:\n"+
+e.message
 );
 
 }
-
-function download(name,data,type){
-
-const blob=new Blob([data],{type});
-
-const url=URL.createObjectURL(blob);
-
-const a=document.createElement("a");
-
-a.href=url;
-
-a.download=name;
-
-a.click();
-
-URL.revokeObjectURL(url);
-
-}
-
-$("#exportBtn").onclick=exportChat;
-
-
-/* =========================================================
-   STUDY TOOLS
-========================================================= */
-
-async function studyMode(){
-
-const topic=prompt(
-"What topic should NEON teach?"
-);
-
-if(!topic)return;
-
-sendMessage(
-`Enter Study Mode.
-
-Topic: ${topic}
-
-Teach me using:
-1. Simple explanation
-2. Core concepts
-3. Important formulas/facts
-4. One worked example
-5. Three practice questions
-6. A short recap`
-);
-
-}
-
-async function generateQuiz(){
-
-const topic=prompt(
-"Quiz topic:"
-);
-
-if(!topic)return;
-
-sendMessage(
-`Create a quiz on ${topic}.
-
-Give me 10 questions.
-Do not reveal the answers immediately.
-Mix easy, medium and hard questions.
-Wait for my answers before grading.`
-);
-
-}
-
-async function flashcards(){
-
-const topic=prompt(
-"Flashcard topic:"
-);
-
-if(!topic)return;
-
-sendMessage(
-`Create 15 useful flashcards about ${topic}.
-
-Format:
-
-CARD 1
-Question:
-Answer:
-
-Keep each card concise.`
-);
-
-}
-
-
-/* =========================================================
-   COMMAND PALETTE
-========================================================= */
-
-$("#commandBtn").onclick=()=>openOverlay("commandOverlay");
-
-$("#commandOverlay").onclick=e=>{
-
-if(e.target===e.currentTarget)
-e.currentTarget.style.display="none";
 
 };
 
-document.querySelectorAll(".command").forEach(cmd=>{
+$("#runCode").onclick=()=>{
 
-cmd.onclick=()=>{
+const code=
+$("#codeEditor").value;
 
-$("#commandOverlay").style.display="none";
+const language=
+$("#codingLanguage").value;
 
-const a=cmd.dataset.action;
+if(language==="HTML"){
 
-if(a==="new")createChat();
-if(a==="study")studyMode();
-if(a==="quiz")generateQuiz();
-if(a==="flash")flashcards();
-if(a==="image")generateImage();
-if(a==="memory")openOverlay("memoryOverlay");
-if(a==="settings")openOverlay("settingsOverlay");
-if(a==="export")exportChat();
+$("#previewFrame")
+.srcdoc=code;
+
+return;
+
+}
+
+if(language==="JavaScript"){
+
+$("#previewFrame")
+.srcdoc=`
+<html>
+<body>
+<script>
+${code.replace(/<\/script>/gi,"<\\/script>")}
+<\/script>
+</body>
+</html>
+`;
+
+return;
+
+}
+
+alert(
+"Live browser preview currently supports HTML and JavaScript."
+);
+
+};
+
+$("#copyAllCode").onclick=()=>{
+
+navigator.clipboard.writeText(
+$("#codeEditor").value
+);
+
+};
+
+
+/* =========================================================
+   WORKSPACE HUB
+========================================================= */
+
+$("#hubBtn").onclick=
+()=>open("hubOverlay");
+
+document
+.querySelectorAll(".hub-card")
+.forEach(card=>{
+
+card.onclick=()=>{
+
+runAction(card.dataset.hub);
 
 };
 
@@ -1352,83 +3137,30 @@ if(a==="export")exportChat();
 
 
 /* =========================================================
-   SETTINGS
+   ACTION ROUTER
 ========================================================= */
 
-function openOverlay(id){
+function runAction(action){
 
-$("#"+id).style.display="flex";
+if(action==="study")studyMode();
 
-}
+if(action==="jee")jeeMode();
 
-function closeOverlays(){
+if(action==="coding")codingLab();
 
-document.querySelectorAll(".overlay")
-.forEach(x=>x.style.display="none");
+if(action==="image")generateImage();
 
-}
+if(action==="web")webResearch();
 
-document.querySelectorAll(".closeModal")
-.forEach(x=>x.onclick=closeOverlays);
+if(action==="quiz")quizMode();
 
-$("#settingsBtn").onclick=()=>{
+if(action==="flash")flashMode();
 
-$("#systemPrompt").value=
-settings.systemPrompt||"";
+if(action==="memory")
+open("memoryOverlay");
 
-$("#themeSelect").value=
-settings.theme||"black";
-
-openOverlay("settingsOverlay");
-
-};
-
-$("#saveSettings").onclick=()=>{
-
-settings.systemPrompt=
-$("#systemPrompt").value;
-
-settings.theme=
-$("#themeSelect").value;
-
-saveSettings();
-
-applyTheme();
-
-closeOverlays();
-
-conversation=[
-{role:"system",content:defaultSystem()},
-...(getCurrent()?.messages||[])
-];
-
-};
-
-function applyTheme(){
-
-if(settings.theme==="midnight"){
-
-document.documentElement.style.setProperty(
-"--bg","#03070d"
-);
-
-document.documentElement.style.setProperty(
-"--panel","#070c12"
-);
-
-}
-
-else{
-
-document.documentElement.style.setProperty(
-"--bg","#050505"
-);
-
-document.documentElement.style.setProperty(
-"--panel","#09090b"
-);
-
-}
+if(action==="personal")
+open("personalOverlay");
 
 }
 
@@ -1441,49 +3173,159 @@ $("#memoryBtn").onclick=()=>{
 
 $("#memoryText").value=memory;
 
-openOverlay("memoryOverlay");
+open("memoryOverlay");
 
 };
 
 $("#saveMemory").onclick=()=>{
 
-memory=$("#memoryText").value;
+memory=
+$("#memoryText").value;
 
 localStorage.setItem(
-"neon_memory",
+"vanta_memory",
 memory
 );
 
-closeOverlays();
-
-conversation=[
-{role:"system",content:defaultSystem()},
-...(getCurrent()?.messages||[])
-];
+close("memoryOverlay");
 
 };
 
 
 /* =========================================================
-   TEMPORARY CHAT
+   PERSONALIZATION
 ========================================================= */
 
-let temporaryMode=false;
+$("#personalBtn").onclick=()=>{
 
-$("#tempBtn").onclick=()=>{
+$("#personality").value=
+personalization.personality||
+"balanced";
 
-temporaryMode=!temporaryMode;
+$("#style").value=
+personalization.style||
+"normal";
 
-$("#tempBtn").style.color=
-temporaryMode?"white":"#aaa";
+$("#customInstructions").value=
+personalization.custom||
+"";
 
-if(temporaryMode){
+open("personalOverlay");
 
-alert(
-"Temporary chat enabled.\nThis conversation will not be saved."
+};
+
+$("#savePersonal").onclick=()=>{
+
+personalization={
+personality:$("#personality").value,
+style:$("#style").value,
+custom:$("#customInstructions").value
+};
+
+savePersonal();
+
+close("personalOverlay");
+
+};
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+$("#settingsBtn").onclick=()=>{
+
+$("#systemPrompt").value=
+settings.systemPrompt||"";
+
+$("#theme").value=
+settings.theme||"void";
+
+open("settingsOverlay");
+
+};
+
+$("#saveSettings").onclick=()=>{
+
+settings={
+systemPrompt:
+$("#systemPrompt").value,
+
+theme:
+$("#theme").value
+};
+
+saveSettings();
+
+applyTheme();
+
+close("settingsOverlay");
+
+};
+
+function applyTheme(){
+
+if(settings.theme==="midnight"){
+
+document.documentElement.style.setProperty(
+"--bg","#03060b"
+);
+
+document.documentElement.style.setProperty(
+"--panel","#080d13"
 );
 
 }
+
+else{
+
+document.documentElement.style.setProperty(
+"--bg","#050506"
+);
+
+document.documentElement.style.setProperty(
+"--panel","#0a0a0c"
+);
+
+}
+
+}
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+$("#exportBtn").onclick=()=>{
+
+const chat=currentChat();
+
+if(!chat)return;
+
+const blob=
+new Blob(
+[
+JSON.stringify(chat,null,2)
+],
+{
+type:"application/json"
+}
+);
+
+const url=
+URL.createObjectURL(blob);
+
+const a=
+document.createElement("a");
+
+a.href=url;
+
+a.download=
+(chat.title||"vanta-chat")+".json";
+
+a.click();
+
+URL.revokeObjectURL(url);
 
 };
 
@@ -1494,7 +3336,7 @@ alert(
 
 $("#clearBtn").onclick=()=>{
 
-const chat=getCurrent();
+const chat=currentChat();
 
 if(!chat)return;
 
@@ -1502,56 +3344,153 @@ chat.messages=[];
 
 chat.updated=Date.now();
 
-saveChats();
+if(!temporary)saveChats();
 
-loadChat(chat.id);
+renderChat();
 
 };
 
 
 /* =========================================================
-   NEW CHAT
+   TEMPORARY
 ========================================================= */
 
-$("#newChat").onclick=createChat;
+$("#temporaryBtn").onclick=()=>{
+
+temporary=!temporary;
+
+$("#temporaryBtn").style.color=
+temporary?"white":"#aaa";
+
+if(temporary){
+
+alert(
+"Temporary Chat enabled.\nThis conversation will not be saved."
+);
+
+}
+
+};
+
+
+/* =========================================================
+   COMMAND CENTER
+========================================================= */
+
+$("#commandBtn").onclick=
+()=>open("commandOverlay");
+
+document
+.querySelectorAll(".command")
+.forEach(cmd=>{
+
+cmd.onclick=()=>{
+
+close("commandOverlay");
+
+const a=cmd.dataset.command;
+
+if(a==="new")createChat();
+if(a==="model")open("modelOverlay");
+if(a==="study")studyMode();
+if(a==="jee")jeeMode();
+if(a==="coding")codingLab();
+if(a==="image")generateImage();
+if(a==="web")webResearch();
+if(a==="quiz")quizMode();
+if(a==="flash")flashMode();
+if(a==="memory")open("memoryOverlay");
+if(a==="personal")open("personalOverlay");
+if(a==="settings")open("settingsOverlay");
+
+};
+
+});
+
+$("#commandSearch").oninput=e=>{
+
+const q=e.target.value.toLowerCase();
+
+document
+.querySelectorAll(".command")
+.forEach(c=>{
+
+c.style.display=
+c.textContent.toLowerCase()
+.includes(q)
+?"block"
+:"none";
+
+});
+
+};
+
+
+/* =========================================================
+   OVERLAYS
+========================================================= */
+
+function open(id){
+
+$("#"+id).style.display="flex";
+
+}
+
+function close(id){
+
+$("#"+id).style.display="none";
+
+}
+
+document
+.querySelectorAll("[data-close]")
+.forEach(btn=>{
+
+btn.onclick=()=>
+close(btn.dataset.close);
+
+});
+
+document
+.querySelectorAll(".overlay")
+.forEach(o=>{
+
+o.addEventListener("click",e=>{
+
+if(e.target===o)
+o.style.display="none";
+
+});
+
+});
 
 
 /* =========================================================
    SEARCH
 ========================================================= */
 
-$("#chatSearch").oninput=e=>
+$("#searchChats").oninput=e=>
 renderHistory(e.target.value);
-
-
-/* =========================================================
-   SUGGESTIONS
-========================================================= */
-
-document.querySelectorAll(".suggestion")
-.forEach(btn=>{
-
-btn.onclick=()=>sendMessage(btn.textContent);
-
-});
 
 
 /* =========================================================
    INPUT
 ========================================================= */
 
-function resize(){
+function resizeInput(){
 
-input.style.height="auto";
+const el=$("#input");
 
-input.style.height=
-Math.min(input.scrollHeight,160)+"px";
+el.style.height="auto";
+
+el.style.height=
+Math.min(el.scrollHeight,170)+"px";
 
 }
 
-input.oninput=resize;
+$("#input").oninput=resizeInput;
 
-input.onkeydown=e=>{
+$("#input").onkeydown=e=>{
 
 if(e.key==="Enter"&&!e.shiftKey){
 
@@ -1563,30 +3502,62 @@ sendMessage();
 
 };
 
-send.onclick=()=>sendMessage();
-
-$("#imageBtn").onclick=generateImage;
-
 
 /* =========================================================
-   COMMAND SEARCH
+   QUICK BUTTONS
 ========================================================= */
 
-$("#commandSearch").oninput=e=>{
+document
+.querySelectorAll(".quick")
+.forEach(btn=>{
 
-const q=e.target.value.toLowerCase();
-
-document.querySelectorAll(".command")
-.forEach(c=>{
-
-c.style.display=
-c.textContent.toLowerCase().includes(q)
-?"block"
-:"none";
+btn.onclick=()=>
+runAction(btn.dataset.action);
 
 });
 
-};
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document.addEventListener("keydown",e=>{
+
+if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){
+
+e.preventDefault();
+
+open("commandOverlay");
+
+$("#commandSearch").focus();
+
+}
+
+if(e.key==="Escape"){
+
+document
+.querySelectorAll(".overlay")
+.forEach(x=>
+x.style.display="none"
+);
+
+}
+
+});
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollBottom(){
+
+const chat=$("#chat");
+
+chat.scrollTop=
+chat.scrollHeight;
+
+}
 
 
 /* =========================================================
@@ -1597,7 +3568,11 @@ applyTheme();
 
 if(chats.length){
 
-loadChat(chats[0].id);
+currentId=chats[0].id;
+
+renderHistory();
+
+renderChat();
 
 }else{
 
@@ -1607,9 +3582,7 @@ createChat();
 
 loadModels();
 
-input.focus();
-
 </script>
 
 </body>
- </html>
+  </html>
