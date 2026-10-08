@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON — AI Chat</title>
+<script src="https://js.puter.com/v2/"></script>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --bg:#050505;--panel:#0a0a0b;--panel2:#0f0f11;--line:#1b1b1f;
+    --text:#f5f5f7;--muted:#85858d;--accent:#fff;--bubble:#111114;
+  }
+  html,body{height:100%;margin:0}
+  body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at 70% 15%,rgba(255,255,255,.055),transparent 26%),
+      radial-gradient(circle at 20% 90%,rgba(255,255,255,.025),transparent 30%),
+      var(--bg);
+    color:var(--text);overflow:hidden;
+  }
+  button,input,textarea{font:inherit}
+  button{color:inherit}
+  .app{display:flex;height:100vh}
+  .sidebar{
+    width:270px;background:rgba(8,8,9,.92);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;padding:16px;backdrop-filter:blur(20px)
+  }
+  .brand{display:flex;align-items:center;gap:11px;padding:8px 6px 20px}
+  .logo{
+    width:34px;height:34px;border:1px solid #333;border-radius:11px;
+    display:grid;place-items:center;background:linear-gradient(145deg,#1b1b1d,#070707);
+    box-shadow:0 0 24px rgba(255,255,255,.07)
+  }
+  .brand b{font-size:15px;letter-spacing:.14em}
+  .brand span{font-size:10px;color:#777;display:block;margin-top:2px}
+  .new{
+    border:1px solid #29292d;background:#111114;border-radius:12px;padding:12px 14px;
+    cursor:pointer;text-align:left;transition:.2s;display:flex;gap:9px;align-items:center
+  }
+  .new:hover{background:#18181b;border-color:#444;transform:translateY(-1px)}
+  .history-title{font-size:10px;letter-spacing:.16em;color:#666;margin:25px 8px 9px}
+  .history{overflow:auto;flex:1}
+  .history-item{
+    padding:10px;border-radius:9px;color:#aaa;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    cursor:pointer;margin-bottom:3px
+  }
+  .history-item:hover{background:#111;color:#eee}
+  .side-bottom{border-top:1px solid var(--line);padding-top:12px}
+  .status{font-size:11px;color:#777;display:flex;align-items:center;gap:7px;padding:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#7dff9b;box-shadow:0 0 10px #7dff9b}
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  header{
+    height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+    justify-content:space-between;padding:0 24px;background:rgba(5,5,5,.62);backdrop-filter:blur(18px)
+  }
+  .model-wrap{display:flex;align-items:center;gap:10px}
+  .model-dot{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 13px #fff}
+  select{
+    appearance:none;background:#0d0d0f;border:1px solid #222;color:#ddd;border-radius:10px;
+    padding:8px 32px 8px 11px;outline:none;cursor:pointer
+  }
+  .header-actions{display:flex;gap:8px}
+  .icon-btn{
+    width:36px;height:36px;border:1px solid #222;background:#0d0d0f;border-radius:10px;
+    display:grid;place-items:center;cursor:pointer;color:#aaa
+  }
+  .icon-btn:hover{color:#fff;border-color:#444}
+  .chat{flex:1;overflow:auto;padding:34px 18px 150px}
+  .inner{max-width:900px;margin:auto}
+  .hero{text-align:center;padding:9vh 0 35px}
+  .orb{
+    width:68px;height:68px;margin:0 auto 22px;border-radius:22px;
+    background:radial-gradient(circle at 35% 30%,#fff,#777 20%,#181818 48%,#080808 70%);
+    border:1px solid #303035;box-shadow:0 0 70px rgba(255,255,255,.1),inset 0 0 25px rgba(255,255,255,.12)
+  }
+  .hero h1{font-size:clamp(32px,5vw,56px);letter-spacing:-.055em;margin:0 0 12px}
+  .hero p{margin:0;color:#777;font-size:14px}
+  .suggestions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:680px;margin:28px auto}
+  .suggest{
+    border:1px solid #1d1d21;background:#0b0b0d;padding:14px;text-align:left;border-radius:13px;
+    cursor:pointer;color:#aaa;transition:.2s
+  }
+  .suggest:hover{background:#121214;border-color:#36363b;color:#eee;transform:translateY(-2px)}
+  .message{display:flex;gap:12px;margin:22px 0;animation:up .25s ease}
+  @keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .avatar{
+    flex:0 0 32px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+    font-size:11px;font-weight:700;background:#111;border:1px solid #29292d
+  }
+  .message.user .avatar{background:#eee;color:#080808;border-color:#eee}
+  .content{max-width:calc(100% - 44px);line-height:1.65;font-size:14px;color:#ddd;white-space:pre-wrap}
+  .message.user .content{
+    background:#111114;border:1px solid #202024;border-radius:14px;padding:10px 13px;color:#eee
+  }
+  .message.ai .content{padding-top:3px}
+  .typing{display:inline-flex;gap:4px;padding:10px 0}
+  .typing i{width:5px;height:5px;background:#777;border-radius:50%;animation:b 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes b{50%{opacity:.2;transform:translateY(-3px)}}
+  .composer-wrap{
+    position:fixed;bottom:0;left:270px;right:0;padding:20px 18px 24px;
+    background:linear-gradient(transparent,rgba(5,5,5,.96) 35%)
+  }
+  .composer{
+    max-width:900px;margin:auto;border:1px solid #29292d;background:rgba(13,13,15,.94);
+    border-radius:18px;padding:10px;box-shadow:0 15px 55px rgba(0,0,0,.5);backdrop-filter:blur(20px)
+  }
+  textarea{
+    width:100%;border:0;outline:0;resize:none;background:transparent;color:#eee;
+    padding:8px 10px;font-size:14px;min-height:44px;max-height:150px
+  }
+  textarea::placeholder{color:#555}
+  .composer-bottom{display:flex;align-items:center;justify-content:space-between;padding:5px 4px 2px 8px}
+  .hint{font-size:10px;color:#555}
+  .send{
+    width:38px;height:38px;border-radius:12px;border:0;background:#f1f1f1;color:#050505;
+    display:grid;place-items:center;cursor:pointer;transition:.2s
+  }
+  .send:hover{transform:scale(1.05);background:#fff}
+  .send:disabled{opacity:.35;cursor:not-allowed;transform:none}
+  .error{color:#ff8d8d;background:#1a0d0d;border:1px solid #3b1b1b;padding:10px 12px;border-radius:10px}
+  @media(max-width:760px){
+    .sidebar{display:none}
+    .composer-wrap{left:0}
+    header{padding:0 14px}
+    .chat{padding-top:20px}
+    .suggestions{grid-template-columns:1fr}
+    .hero{padding-top:8vh}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">✦</div>
+      <div><b>NEON</b><span>PERSONAL AI</span></div>
+    </div>
+    <button class="new" id="newChat">＋ <span>New conversation</span></button>
+    <div class="history-title">RECENT</div>
+    <div class="history" id="history"></div>
+    <div class="side-bottom">
+      <div class="status"><span class="dot"></span> Puter AI connected</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header>
+      <div class="model-wrap">
+        <span class="model-dot"></span>
+        <select id="model">
+          <option value="gpt-5.6-luna">GPT-5.6 Luna</option>
+          <option value="gpt-5-nano">GPT-5 Nano</option>
+          <option value="gemini-3.1-flash-lite">Gemini Flash Lite</option>
+        </select>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="clear" title="Clear chat">⌫</button>
+      </div>
+    </header>
+
+    <section class="chat" id="chat">
+      <div class="inner" id="messages">
+        <div class="hero" id="hero">
+          <div class="orb"></div>
+          <h1>What are we building?</h1>
+          <p>A clean, private-feeling AI workspace powered by Puter.</p>
+          <div class="suggestions">
+            <button class="suggest">Explain quantum computing simply</button>
+            <button class="suggest">Help me build a website</button>
+            <button class="suggest">Give me a focused study plan</button>
+            <button class="suggest">Brainstorm a crazy startup idea</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea id="input" rows="1" placeholder="Message NEON..."></textarea>
+        <div class="composer-bottom">
+          <span class="hint">Enter to send · Shift + Enter for new line</span>
+          <button class="send" id="send" aria-label="Send">↑</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const input = $('#input');
+const send = $('#send');
+const messages = $('#messages');
+const hero = $('#hero');
+const historyEl = $('#history');
+const model = $('#model');
+
+let conversation = [
+  { role: 'system', content:
+    'You are NEON, a helpful, concise, intelligent AI assistant. ' +
+    'Use clean formatting. Be friendly and direct. Do not claim to have capabilities you do not have.'
+  }
+];
+let busy = false;
+
+function escapeHTML(str){
+  return str.replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  }[c]));
+}
+
+function addMessage(role, text){
+  if(hero) hero.style.display = 'none';
+  const row = document.createElement('div');
+  row.className = 'message ' + (role === 'user' ? 'user' : 'ai');
+  row.innerHTML = `
+    <div class="avatar">${role === 'user' ? 'YOU' : '✦'}</div>
+    <div class="content">${escapeHTML(text)}</div>
+  `;
+  messages.appendChild(row);
+  scrollBottom();
+  return row.querySelector('.content');
+}
+
+function addTyping(){
+  if(hero) hero.style.display = 'none';
+  const row = document.createElement('div');
+  row.className = 'message ai';
+  row.id = 'typing';
+  row.innerHTML = `<div class="avatar">✦</div><div class="content"><span class="typing"><i></i><i></i><i></i></span></div>`;
+  messages.appendChild(row);
+  scrollBottom();
+}
+
+function removeTyping(){
+  document.querySelector('#typing')?.remove();
+}
+
+function scrollBottom(){
+  const chat = $('#chat');
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addHistory(text){
+  const item = document.createElement('div');
+  item.className = 'history-item';
+  item.textContent = text;
+  historyEl.prepend(item);
+  while(historyEl.children.length > 12) historyEl.lastChild.remove();
+}
+
+async function sendMessage(text = input.value.trim()){
+  if(!text || busy) return;
+  busy = true; send.disabled = true;
+  input.value = ''; resize();
+  addMessage('user', text);
+  addHistory(text);
+  conversation.push({role:'user', content:text});
+  addTyping();
+
+  try{
+    const response = await puter.ai.chat(conversation, {
+      model: model.value,
+      normalize: true,
+      stream: false
+    });
+
+    const reply = response?.message?.content ?? response?.text ?? String(response);
+    removeTyping();
+    addMessage('assistant', reply);
+    conversation.push({role:'assistant', content:reply});
+  }catch(err){
+    removeTyping();
+    const row = document.createElement('div');
+    row.className = 'message ai';
+    row.innerHTML = `<div class="avatar">!</div><div class="content"><div class="error">Couldn’t reach Puter AI. ${escapeHTML(err?.message || 'Please try again.')}</div></div>`;
+    messages.appendChild(row);
+    scrollBottom();
+  }finally{
+    busy = false; send.disabled = false; input.focus();
+  }
+}
+
+function resize(){
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight,150) + 'px';
+}
+
+input.addEventListener('input', resize);
+input.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault(); sendMessage();
+  }
+});
+send.addEventListener('click', () => sendMessage());
+
+document.querySelectorAll('.suggest').forEach(btn => {
+  btn.addEventListener('click', () => sendMessage(btn.textContent));
+});
+
+$('#newChat').addEventListener('click', () => {
+  conversation = [conversation[0]];
+  messages.innerHTML = '';
+  messages.appendChild(hero);
+  hero.style.display = '';
+  input.focus();
+});
+
+$('#clear').addEventListener('click', () => {
+  conversation = [conversation[0]];
+  messages.innerHTML = '';
+  messages.appendChild(hero);
+  hero.style.display = '';
+});
+
+input.focus();
+</script>
+</body>
+</html>
